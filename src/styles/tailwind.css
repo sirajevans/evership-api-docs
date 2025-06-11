@@ -40,7 +40,7 @@
   --container-3xl: 50rem;
   --container-5xl: 66rem;
 
-  --color-obsidian-950: oklch(0.13 0.02 320.56);
+  --color-obsidian-950: #09050a;
 }
 
 @layer base {
