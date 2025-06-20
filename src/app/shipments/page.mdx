@@ -342,7 +342,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
     <Property name="receiver.delivery_address.country" type="string">
       Country of the delivery address.
     </Property>
-    <Property name="receiver.delivery_address.full_address" type="string">
+    <Property name="receiver.delivery_address.full_address" type="string" required>
       Full formatted address of the delivery location.
     </Property>
     <Property name="receiver.delivery_address.latitude" type="float">
@@ -582,7 +582,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
   </CodeGroup>
 
-    <CodeGroup title="Response" tag="200" label="Response">
+    <CodeGroup title="Response" tag="200" label="Created draft">
 
     ```json {{ title: 'Created draft' }}
     {
@@ -689,6 +689,9 @@ The shipment model stores all the details needed to fulfill and track a shipment
     }
     ```
 
+    </CodeGroup>
+
+    <CodeGroup title="Response" tag="200" label="Created purchased">
     ```json {{ title: 'Created purchased' }}
     {
       "id": 1339657,
@@ -853,6 +856,838 @@ The shipment model stores all the details needed to fulfill and track a shipment
       }
     }
     ```
+    </CodeGroup>
+  </Col>
+</Row>
+
+---
+
+## Purchase Shipment {{ tag: 'POST', label: 'https://api.evership.app/v1/purchase-shipment' }}
+
+<Row>
+  <Col>
+
+    Use this endpoint to purchase an existing shipment (or batch of shipments) that was previously created. The shipment must already have a valid rate associated with it. Once purchased, a label and tracking number will be returned.
+
+    ### Request fields
+
+    <Properties>
+      <Property name="shipment_ids" type="array" required>
+        List of shipment IDs to purchase.
+      </Property>
+      <Property name="shipment_ids[]" type="string" required>
+        Must be a valid Evership shipment ID (e.g., <code>shp_xxxx</code>) in a pending state.
+      </Property>
+      <Property name="metadata" type="object">
+        Optional object to append metadata to all shipments.
+      </Property>
+    </Properties>
+
+    <div className="my-24"></div>
+
+    ### Response Fields
+    <Properties>
+      <Property name="status" type="string">
+        Response status: <code>success</code> or <code>error</code>.
+      </Property>
+      <Property name="purchased_shipments" type="array">
+        Array of successfully purchased shipment objects.
+      </Property>
+      <Property name="purchased_shipments[].id" type="string">
+        Unique ID of the purchased shipment.
+      </Property>
+      <Property name="purchased_shipments[].state" type="string">
+        Shipment state, should be <code>purchased</code>.
+      </Property>
+      <Property name="purchased_shipments[].label_url" type="string">
+        URL to download the shipping label.
+      </Property>
+      <Property name="purchased_shipments[].tracking_number" type="string">
+        Carrier-provided tracking number.
+      </Property>
+      <Property name="purchased_shipments[].provider" type="string">
+        Shipping carrier used (e.g. The Courier Guy, Aramex).
+      </Property>
+      <Property name="purchased_shipments[].service" type="string">
+        Shipping service used (e.g. Express, Overnight).
+      </Property>
+      <Property name="purchased_shipments[].rate.amount" type="float">
+        Cost of the shipment.
+      </Property>
+      <Property name="purchased_shipments[].rate.currency" type="string">
+        Currency code for the amount, e.g. <code>ZAR</code>.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/purchase-shipment">
+
+    ```json
+    {
+      "shipment_ids": [
+        "shp_01HF5TC8X63C3MFX3D0WTTVRHN",
+        "shp_01HF5TD2PRJ5R3T0E0KXJQ0T9X"
+      ]
+    }
+    ```
+
+    </CodeGroup>
+
+    <CodeGroup title="Response" tag="200" label="Success">
+    ```json
+    {
+      "status": "success",
+      "purchased_shipments": [
+        {
+          "id": "shp_01HF5TC8X63C3MFX3D0WTTVRHN",
+          "state": "purchased",
+          "label_url": "https://labels.evership.app/label_01.pdf",
+          "tracking_number": "TGC123456789",
+          "provider": "The Courier Guy",
+          "service": "Express",
+          "rate": {
+            "amount": 89.99,
+            "currency": "ZAR"
+          }
+        },
+        {
+          "id": "shp_01HF5TD2PRJ5R3T0E0KXJQ0T9X",
+          "state": "purchased",
+          "label_url": "https://labels.evership.app/label_02.pdf",
+          "tracking_number": "RMX987654321",
+          "provider": "Aramex",
+          "service": "Overnight",
+          "rate": {
+            "amount": 109.99,
+            "currency": "ZAR"
+          }
+        }
+      ]
+    }
+    ```
+    </CodeGroup>
+  </Col>
+</Row>
+
+---
+
+## Edit Shipment {{ tag: 'PUT', label: 'https://api.evership.app/v1/shipments/{shipment_id}' }}
+
+<Row>
+  <Col>
+
+    Use this endpoint to update an existing shipment that is still in a pending state.
+
+    You can update the collection address, delivery address, parcel dimensions/quantities, and metadata fields. This is useful if your customer updated their delivery information or you need to fix a mistake before purchasing the shipment.
+
+    Once a shipment is purchased via /purchase-shipment, it can no longer be updated and will return a 409 Conflict error.
+
+    ### Request fields
+
+    <Properties>
+      <Property name="collection_address.line1" type="string">
+        Street line 1 of collection address
+      </Property>
+      <Property name="collection_address.line2" type="string">
+        Street line 2
+      </Property>
+      <Property name="collection_address.city" type="string">
+        City
+      </Property>
+      <Property name="collection_address.postal_code" type="string">
+        Postal code
+      </Property>
+      <Property name="collection_address.state" type="string">
+        Province or state
+      </Property>
+      <Property name="collection_address.country" type="string">
+        ISO 3166-1 alpha-2 country code
+      </Property>
+      <Property name="delivery_address.line1" type="string">
+        Street line 1 of delivery address
+      </Property>
+      <Property name="delivery_address.line2" type="string">
+        Street line 2
+      </Property>
+      <Property name="delivery_address.city" type="string">
+        City
+      </Property>
+      <Property name="delivery_address.postal_code" type="string">
+        Postal code
+      </Property>
+      <Property name="delivery_address.state" type="string">
+        Province or state
+      </Property>
+      <Property name="delivery_address.country" type="string">
+        ISO 3166-1 alpha-2 country code
+      </Property>
+      <Property name="parcels[].quantity" type="integer" required>
+        Number of identical parcels
+      </Property>
+      <Property name="parcels[].weight" type="float" required>
+        Weight in kg
+      </Property>
+      <Property name="parcels[].length" type="float" required>
+        Length in cm
+      </Property>
+      <Property name="parcels[].width" type="float" required>
+        Width in cm
+      </Property>
+      <Property name="parcels[].height" type="float" required>
+        Height in cm
+      </Property>
+      <Property name="metadata.order_number" type="string">
+        Order number reference
+      </Property>
+      <Property name="metadata.customer_name" type="string">
+        Customer name
+      </Property>
+      <Property name="metadata.customer_phone" type="string">
+        Phone number
+      </Property>
+      <Property name="metadata.customer_email" type="string">
+        Email address
+      </Property>
+    </Properties>
+
+    <div className="my-24"></div>
+
+    ### Response Fields
+    <Properties>
+      <Property name="status" type="string">
+        Response status, e.g. success or error
+      </Property>
+      <Property name="shipment.id" type="string">
+        Unique ID of the shipment
+      </Property>
+      <Property name="shipment.state" type="string">
+        Should be pending
+      </Property>
+      <Property name="shipment.collection_address" type="object">
+        Updated collection address object
+      </Property>
+      <Property name="shipment.delivery_address" type="object">
+        Updated delivery address object
+      </Property>
+      <Property name="shipment.parcels" type="array">
+        Updated parcel list
+      </Property>
+      <Property name="shipment.metadata" type="object">
+        Updated metadata object
+      </Property>
+      <Property name="shipment.metadata.order_number" type="string">
+        Order reference number
+      </Property>
+      <Property name="shipment.metadata.customer_name" type="string">
+        Customer full name
+      </Property>
+      <Property name="shipment.metadata.customer_email" type="string">
+        Customer email address
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="PUT" label="/v1/shipments/{shipment_id}">
+
+    ```json
+    {
+      "collection_address": {
+        "line1": "Unit 3",
+        "line2": "Brickfield Park",
+        "city": "Cape Town",
+        "postal_code": "7925",
+        "state": "Western Cape",
+        "country": "ZA"
+      },
+      "delivery_address": {
+        "line1": "75 Harrington Street",
+        "line2": "",
+        "city": "Cape Town",
+        "postal_code": "8001",
+        "state": "Western Cape",
+        "country": "ZA"
+      },
+      "parcels": [
+        {
+          "quantity": 1,
+          "weight": 2,
+          "length": 12,
+          "width": 12,
+          "height": 12
+        }
+      ],
+      "metadata": {
+        "order_number": "EV-555",
+        "customer_name": "James Smith",
+        "customer_email": "james@example.com"
+      }
+    }
+    ```
+
+    </CodeGroup>
+
+    <CodeGroup title="Response" tag="200" label="Success">
+    ```json
+    {
+      "status": "success",
+      "shipment": {
+        "id": "shp_01HF5TC8X63C3MFX3D0WTTVRHN",
+        "state": "pending",
+        "collection_address": {
+          "line1": "Unit 3",
+          "line2": "Brickfield Park",
+          "city": "Cape Town",
+          "postal_code": "7925",
+          "state": "Western Cape",
+          "country": "ZA"
+        },
+        "delivery_address": {
+          "line1": "75 Harrington Street",
+          "line2": "",
+          "city": "Cape Town",
+          "postal_code": "8001",
+          "state": "Western Cape",
+          "country": "ZA"
+        },
+        "parcels": [
+          {
+            "quantity": 1,
+            "weight": 2,
+            "length": 12,
+            "width": 12,
+            "height": 12
+          }
+        ],
+        "metadata": {
+          "order_number": "EV-555",
+          "customer_name": "James Smith",
+          "customer_email": "james@example.com"
+        }
+      }
+    }
+    ```
+    </CodeGroup>
+  </Col>
+</Row>
+
+---
+
+## List Shipments {{ tag: 'GET', label: 'https://api.evership.app/v1/list-shipments' }}
+
+<Row>
+  <Col>
+
+    Use this endpoint to return a paginated list of shipments associated with your account.
+    You can filter by state, a date range (created_from and created_to), or search by order_number or tracking_number.
+
+    By default, 25 shipments are returned per page. You can override the limit parameter and paginate using cursor.
+
+    ### Request fields
+
+    <Properties>
+      <Property name="state" type="string">
+        Filter shipments by state (pending, purchased, cancelled)
+      </Property>
+      <Property name="created_from" type="string">
+        Filter shipments created after this ISO 8601 timestamp
+      </Property>
+      <Property name="created_to" type="string">
+        Filter shipments created before this ISO 8601 timestamp
+      </Property>
+      <Property name="order_number" type="string">
+        Search by metadata.order_number
+      </Property>
+      <Property name="tracking_number" type="string">
+        Search by tracking_number
+      </Property>
+      <Property name="limit" type="integer">
+        Number of shipments per page (default 25, max 100)
+      </Property>
+      <Property name="cursor" type="string">
+        Used to paginate to the next page
+      </Property>
+    </Properties>
+
+    <div className="my-24"></div>
+
+    ### Response Fields
+    <Properties>
+      <Property name="status" type="string">
+        Status of the response, e.g. success
+      </Property>
+      <Property name="shipments" type="array">
+        Array of shipment records matching the query
+      </Property>
+      <Property name="shipments[].id" type="string">
+        Unique ID of the shipment
+      </Property>
+      <Property name="shipments[].state" type="string">
+        Shipment state (pending, purchased, cancelled)
+      </Property>
+      <Property name="shipments[].tracking_number" type="string">
+        Carrier tracking number (if purchased)
+      </Property>
+      <Property name="shipments[].label_url" type="string">
+        Label download URL (if purchased)
+      </Property>
+      <Property name="shipments[].collection_address" type="object">
+        Address object where the parcel is collected
+      </Property>
+      <Property name="shipments[].delivery_address" type="object">
+        Address object where the parcel is delivered
+      </Property>
+      <Property name="shipments[].parcels" type="array">
+        Array of parcel data (quantity, size, weight)
+      </Property>
+      <Property name="shipments[].metadata.order_number" type="string">
+        Order number from metadata
+      </Property>
+      <Property name="shipments[].metadata.customer_name" type="string">
+        Name of the customer
+      </Property>
+      <Property name="shipments[].metadata.customer_email" type="string">
+        Email of the customer
+      </Property>
+      <Property name="pagination.limit" type="integer">
+        Limit set in the request
+      </Property>
+      <Property name="pagination.cursor" type="string">
+        Cursor token used for pagination (send as query param in next request)
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/list-shipments">
+    ```bash
+    GET https://api.example.com/list-shipments?page=1&results_per_page=25&status=pending&payment_status=paid&shipment_type=outbound&carrier=fw&collection_region=Western%20Cape&delivery_region=Eastern%20Cape&created_date_range_start=2025-02-01&created_date_range_end=2025-02-14&collection_date_range_start=2025-02-10&collection_date_range_end=2025-02-15&last_updated_range_start=2025-02-12&last_updated_range_end=2025-02-16&geo_coded_status=unmatched
+    ```
+    </CodeGroup>
+
+    <CodeGroup title="Response" tag="200" label="Success">
+    ```json
+    {
+      "status": "success",
+      "shipments": [
+        {
+          "id": "shp_01HF5TC8X63C3MFX3D0WTTVRHN",
+          "state": "purchased",
+          "tracking_number": "TGC123456789",
+          "label_url": "https://labels.evership.app/label_01.pdf",
+          "collection_address": {
+            "line1": "Unit 3",
+            "line2": "Black River Park",
+            "city": "Cape Town",
+            "postal_code": "7925",
+            "state": "Western Cape",
+            "country": "ZA"
+          },
+          "delivery_address": {
+            "line1": "113 Loop St",
+            "line2": "",
+            "city": "Cape Town City Centre",
+            "city": "Cape Town",
+            "province": "Western Cape",
+            "postal_code": "8000",
+            "country": "South Africa",
+            "full_address": "113 Loop St, Cape Town City Centre, Cape Town, Western Cape, 8000, South Africa",
+            "latitude": -33.9242692,
+            "longitude": 18.4187029,
+            "geocode_status": "partially_matched"
+          },
+          "parcels": [
+            {
+              "quantity": 1,
+              "weight": 1,
+              "height": 10,
+              "width": 10,
+              "length": 10
+            }
+          ],
+          "metadata": {
+            "order_number": "EV123456",
+            "customer_name": "Sarah Smith",
+            "customer_email": "sarah@example.com"
+          }
+        },
+        {
+          "id": "shp_01HF5TD2PRJ5R3T0E0KXJQ0T9X",
+          "state": "pending",
+          "tracking_number": null,
+          "label_url": null,
+          "collection_address": {
+            "line1": "Unit 12",
+            "line2": "Brickfield Park",
+            "city": "Cape Town",
+            "postal_code": "7925",
+            "state": "Western Cape",
+            "country": "ZA"
+          },
+          "delivery_address": {
+            "line1": "14 Long Street",
+            "line2": "",
+            "city": "Cape Town",
+            "postal_code": "8001",
+            "state": "Western Cape",
+            "country": "ZA"
+          },
+          "parcels": [
+            {
+              "quantity": 1,
+              "weight": 2,
+              "height": 12,
+              "width": 12,
+              "length": 12
+            }
+          ],
+          "metadata": {
+            "order_number": "EV555",
+            "customer_name": "James Smith",
+            "customer_email": "james@example.com"
+          }
+        }
+      ],
+      "pagination": {
+        "limit": 25,
+        "cursor": "eyJpZCI6InNocl8wMUhGNT..."
+      }
+    }
+    ```
+    </CodeGroup>
+  </Col>
+</Row>
+
+---
+
+## Retrieve Shipments {{ tag: 'GET', label: 'https://api.evership.app/shipments/{shipment_id}' }}
+
+<Row>
+  <Col>
+
+    This API is different from [List shipments](https://www.notion.so/List-shipments-1d0f4d58d4e38128911ecdf642ae6384?pvs=21) API, here you can only fetch the details of a single shipment and not multiple shipments in a list.
+    
+    Using this "Retrieve shipment" API you can retrieve a single shipment record by passing the shipment's `shipment_id` and the response will return full details of the shipment, including the tracking log and shipping labels.
+    Both purchased and un-purchased shipments can be retrieved using this "Retrieve shipment" API
+
+    ### Request fields
+    <Properties>
+      <Property name="shipment_id" type="string">
+        Unique ID for the shipment record that is being retrieved
+      </Property>
+    </Properties>
+
+    <div className="my-24"></div>
+
+    ### Response Fields
+    <Properties>
+      <Property name="status" type="string">
+        Status of the response, e.g. success
+      </Property>
+      <Property name="shipments" type="array">
+        Array of shipment records matching the query
+      </Property>
+      <Property name="shipments[].id" type="string">
+        Unique ID of the shipment
+      </Property>
+      <Property name="shipments[].state" type="string">
+        Shipment state (pending, purchased, cancelled)
+      </Property>
+      <Property name="shipments[].tracking_number" type="string">
+        Carrier tracking number (if purchased)
+      </Property>
+      <Property name="shipments[].label_url" type="string">
+        Label download URL (if purchased)
+      </Property>
+      <Property name="shipments[].collection_address" type="object">
+        Address object where the parcel is collected
+      </Property>
+      <Property name="shipments[].delivery_address" type="object">
+        Address object where the parcel is delivered
+      </Property>
+      <Property name="shipments[].parcels" type="array">
+        Array of parcel data (quantity, size, weight)
+      </Property>
+      <Property name="shipments[].metadata.order_number" type="string">
+        Order number from metadata
+      </Property>
+      <Property name="shipments[].metadata.customer_name" type="string">
+        Name of the customer
+      </Property>
+      <Property name="shipments[].metadata.customer_email" type="string">
+        Email of the customer
+      </Property>
+      <Property name="pagination.limit" type="integer">
+        Limit set in the request
+      </Property>
+      <Property name="pagination.cursor" type="string">
+        Cursor token used for pagination (send as query param in next request)
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/list-shipments">
+    ```bash
+    GET https://api.evership.app/shipments/{shipment_id}
+    ```
+    </CodeGroup>
+    <CodeGroup title="Response" tag="200" label="Success">
+        ```json
+        {
+            "shipment_id": "4rUA2",
+            "waybill_number": "",
+            "created_at": "2025-06-20T17:29:27Z",
+            "last_updated_at": "2025-06-20T17:29:28Z",
+            "shipment_title": "Create title",
+            "shipment_type": "outbound",
+            "payment_status": "pending",
+            "label_purchased": false,
+            "collection_date": null,
+            "billing": [],
+            "sender": {
+                "name": "Create Sender",
+                "contact": "081 000 0001",
+                "email": null,
+                "collection_address": {
+                    "address_1": "101 Florida Road",
+                    "address_2": "Apartment 4B",
+                    "suburb": "Morningside",
+                    "city": "Durban",
+                    "province": "KwaZulu-Natal",
+                    "postal_code": "4001",
+                    "country": "South Africa",
+                    "full_address": "101 Florida Road, Apartment 4B, Morningside, Durban, KwaZulu-Natal, 4001, South Africa",
+                    "latitude": -33.9373392,
+                    "longitude": 18.4330704,
+                    "geocode_status": "fully_matched"
+                },
+                "pickup_instructions": "Create sender instructions"
+            },
+            "receiver": {
+                "name": "Create Receiver",
+                "contact": "070 000 0001",
+                "email": null,
+                "delivery_address": {
+                    "address_1": "113 Loop St",
+                    "address_2": "Unit 12",
+                    "suburb": "Cape Town City Centre",
+                    "city": "Cape Town",
+                    "province": "Western Cape",
+                    "postal_code": "8000",
+                    "country": "South Africa",
+                    "full_address": "113 Loop St, Unit 12, Cape Town City Centre, Cape Town, Western Cape, 8000, South Africa",
+                    "latitude": -33.9242692,
+                    "longitude": 18.4187029,
+                    "geocode_status": "fully_matched"
+                },
+                "drop_off_instructions": "Create receiver instructions"
+            },
+            "latest_status": {
+                "primary_status": {
+                    "status": "pending",
+                    "slug": "pending",
+                    "code": 1
+                },
+                "secondary_status": null
+            },
+            "services": [
+                {
+                    "service_type": "shipment",
+                    "carrier_slug": "dpdl",
+                    "carrier_id": 3,
+                    "carrier_name": "DPD Laser",
+                    "service_id": 15,
+                    "service_name": "ECON",
+                    "service_slug": "dpd-econ",
+                    "service_full_name": "ECONOMY",
+                    "service_sla_text": "2 - 3 day",
+                    "service_transit_days": 3,
+                    "collection_cutoff_time": "14:00",
+                    "latest_delivery_time": "17:30"
+                }
+            ],
+            "parcels": [
+                {
+                    "id": "4rUwD",
+                    "parcel_number": null,
+                    "reference": "CREATE-REF",
+                    "description": "Create description",
+                    "dimensions": {
+                        "length": 1,
+                        "width": 1,
+                        "height": 1
+                    },
+                    "weight": 1
+                }
+            ],
+            "tracking_log": [],
+            "est_delivery": {},
+            "labels": {},
+            "tracking_link": {}
+        }
+        ```
+    </CodeGroup>
+  </Col>
+</Row>
+
+---
+
+## Cancel Shipments {{ tag: 'POST', label: 'https://www.api.evership.co.za/v1/cancel-shipment/{shipment_id}' }}
+
+<Row>
+  <Col>
+
+    This "Cancel shipment" API will allow you to cancel a single shipment that has been purchased but not collected by the carrier (status = `requested` or `approved`) by passing the `shipment_id` of the shipment you want to cancel.
+
+    In the case that you try to cancel a shipment that has a status = `pending` then we will return an error message, because the shipment has not been purchased yet.
+    In the case that you try to cancel a shipment record where the status of the shipment ≠ `requested` or `approved` then we will return an error message, because this means that the shipment has already been collected by the carrier.
+
+    ### Request fields
+    <Properties>
+      <Property name="shipment_id" type="string">
+        The unique shipment_id of the shipment that the developer wants to cancel
+      </Property>
+    </Properties>
+
+    <div className="my-24"></div>
+
+    ### Response Fields
+    <Properties>
+      <Property name="status" type="string">
+        Status of the response, e.g. success
+      </Property>
+      <Property name="shipments" type="array">
+        Array of shipment records matching the query
+      </Property>
+      <Property name="shipments[].id" type="string">
+        Unique ID of the shipment
+      </Property>
+      <Property name="shipments[].state" type="string">
+        Shipment state (pending, purchased, cancelled)
+      </Property>
+      <Property name="shipments[].tracking_number" type="string">
+        Carrier tracking number (if purchased)
+      </Property>
+      <Property name="shipments[].label_url" type="string">
+        Label download URL (if purchased)
+      </Property>
+      <Property name="shipments[].collection_address" type="object">
+        Address object where the parcel is collected
+      </Property>
+      <Property name="shipments[].delivery_address" type="object">
+        Address object where the parcel is delivered
+      </Property>
+      <Property name="shipments[].parcels" type="array">
+        Array of parcel data (quantity, size, weight)
+      </Property>
+      <Property name="shipments[].metadata.order_number" type="string">
+        Order number from metadata
+      </Property>
+      <Property name="shipments[].metadata.customer_name" type="string">
+        Name of the customer
+      </Property>
+      <Property name="shipments[].metadata.customer_email" type="string">
+        Email of the customer
+      </Property>
+      <Property name="pagination.limit" type="integer">
+        Limit set in the request
+      </Property>
+      <Property name="pagination.cursor" type="string">
+        Cursor token used for pagination (send as query param in next request)
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/list-shipments">
+    ```bash
+    GET https://api.evership.app/shipments/{shipment_id}
+    ```
+    </CodeGroup>
+    <CodeGroup title="Response">
+      
+      ```json {"title": "Success"}
+      {
+        "id": 1339657,
+        "cancellation_status": "success",
+        "status": {
+          "primary": {
+            "status": "cancelled",
+            "code": "12"
+          },
+          "secondary": {
+            "status": "cancelled_user",
+            "code": "12A"
+          }
+        },
+        "cancellation_timestamp": "2025-03-09T12:00:00+10:30",
+        "message": "The shipment has been cancelled successfully."
+      }
+      ```
+
+      ```json {"title": "Failed (pending)"}
+      {
+        "id": 1339657,
+        "cancellation_status": "failed_shipment_unpurchased",
+        "status": {
+          "primary": {
+            "status": "pending",
+            "code": "1"
+          },
+          "secondary": {
+            "status": "",
+            "code": ""
+          }
+        },
+        "cancellation_timestamp": "",
+        "message": "This shipment could not be cancelled as it has not been purchased yet."
+      }
+      ```
+
+      ```json {"title": "Failed (Status)"}
+      {
+        "id": 1339657,
+        "cancellation_status": "failed",
+        "status": {
+          "primary": {
+            "status": "out_for_delivery",
+            "code": "8"
+          },
+          "secondary": {
+            "status": "arrived_deliver",
+            "code": "8A"
+          }
+        },
+        "cancellation_timestamp": "",
+        "message": "This shipment could not be cancelled, please reach out to our support team for assistance."
+      }
+      ```
+
+      ```json {"title": "Failed (Cancelled)"}
+      {
+        "id": 1339657,
+        "cancellation_status": "failed_shipment_already_cancelled",
+        "status": {
+          "primary": {
+            "status": "cancelled",
+            "code": "12"
+          },
+          "secondary": {
+            "status": "cancelled_user",
+            "code": "12A"
+          }
+        },
+        "cancellation_timestamp": "2025-03-09T12:00:00+10:30",
+        "message": "This shipment has already been cancelled"
+      }
+      ```
     </CodeGroup>
   </Col>
 </Row>
