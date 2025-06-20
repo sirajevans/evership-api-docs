@@ -272,278 +272,283 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
   </CodeGroup>
 
-    <CodeGroup title="Response" tag="200" label="Pending">
-    ```json
-    {
-      "id": 1339657,
-      "waybill_number": "",
-      "created_at": "2025-02-14T06:20:26Z",
-      "last_updated_at": "",
-      "shipment_title": "Order #1234",
-      "shipment_type": "outbound",
-      "label_purchased": false,
-      "collection_date": "",
-      "billing": [],
-      "sender": {
-        "name": "Ishmael Evans",
-        "contact": "0817553597",
-        "email": "ishmael@usecarter.com",
-        "collection_address": {
-          "address1": "26 Washington Rd",
-          "address2": "",
-          "suburb": "Claremont",
-          "city": "Cape Town",
-          "province": "Western Cape",
-          "postal_code": "7780",
-          "country": "South Africa",
-          "full_address": "26 Washington Rd, Claremont, Cape Town, 7780, South Africa",
-          "latitude": 40.7128,
-          "longitude": -74.0060,
-          "geocode_status": "partially_matched"
-        },
-        "pickup_instructions": "Call when arrived"
-      },
-      "receiver": {
-        "name": "Jane Smith",
-        "contact": "0787654321",
-        "email": "janesmith@example.com",
-        "delivery_address": {
-          "address1": "12 Clyde Road",
-          "address2": "",
-          "suburb": "Green Point",
-          "city": "Cape Town",
-          "province": "Western Cape",
-          "postal_code": "8005",
-          "country": "South Africa",
-          "full_address": "12 Clyde Road, Green Point, Cape Town, 8005, South Africa",
-          "latitude": 34.0522,
-          "longitude": -118.2437,
-          "geocode_status": "matched"
-        },
-        "drop_off_instructions": "Ring the doorbell twice"
-      },
-      "latest_status": {
-        "primary_status": {
-          "status": "pending",
-          "slug": "pending",
-          "code": 1
-        },
-        "secondary_status": null
-      },
-      "services": [
+    <Tabs>
+      <TabList>
+        <Tab>Pending</Tab>
+        <Tab>Purchased</Tab>
+      </TabList>
+      <TabPanel>
+        ```json
         {
-          "service_type": "shipment",
-          "carrier_slug": "fw",
-          "carrier_id": 4,
-          "carrier_name": "Fastway",
-          "service_id": 18,
-          "service_name": "BROWN",
-          "service_slug": "fw-brown",
-          "service_full_name": "Local Parcel",
-          "service_sla_text": "Same day",
-          "service_transit_days": 0,
-          "collection_cutoff_time": "14:00",
-          "latest_delivery_time": "18:00"
-        }
-      ],
-      "parcels": [
-        {
-          "id": "12345_1",
-          "parcel_number": "",
-          "reference": "Parcel-REF-1",
-          "description": "Books",
-          "dimensions": {
-            "length": 30,
-            "width": 20,
-            "height": 10
+          "id": 1339657,
+          "waybill_number": "",
+          "created_at": "2025-02-14T06:20:26Z",
+          "last_updated_at": "",
+          "shipment_title": "Order #1234",
+          "shipment_type": "outbound",
+          "label_purchased": false,
+          "collection_date": "",
+          "billing": [],
+          "sender": {
+            "name": "Ishmael Evans",
+            "contact": "0817553597",
+            "email": "ishmael@usecarter.com",
+            "collection_address": {
+              "address1": "26 Washington Rd",
+              "address2": "",
+              "suburb": "Claremont",
+              "city": "Cape Town",
+              "province": "Western Cape",
+              "postal_code": "7780",
+              "country": "South Africa",
+              "full_address": "26 Washington Rd, Claremont, Cape Town, 7780, South Africa",
+              "latitude": 40.7128,
+              "longitude": -74.0060,
+              "geocode_status": "partially_matched"
+            },
+            "pickup_instructions": "Call when arrived"
           },
-          "weight": 5
-        },
-        {
-          "id": "12345_2",
-          "parcel_number": "",
-          "reference": "Parcel-REF-2",
-          "description": "Clothes",
-          "dimensions": {
-            "length": 40,
-            "width": 25,
-            "height": 15
+          "receiver": {
+            "name": "Jane Smith",
+            "contact": "0787654321",
+            "email": "janesmith@example.com",
+            "delivery_address": {
+              "address1": "12 Clyde Road",
+              "address2": "",
+              "suburb": "Green Point",
+              "city": "Cape Town",
+              "province": "Western Cape",
+              "postal_code": "8005",
+              "country": "South Africa",
+              "full_address": "12 Clyde Road, Green Point, Cape Town, 8005, South Africa",
+              "latitude": 34.0522,
+              "longitude": -118.2437,
+              "geocode_status": "matched"
+            },
+            "drop_off_instructions": "Ring the doorbell twice"
           },
-          "weight": 7
+          "latest_status": {
+            "primary_status": {
+              "status": "pending",
+              "slug": "pending",
+              "code": 1
+            },
+            "secondary_status": null
+          },
+          "services": [
+            {
+              "service_type": "shipment",
+              "carrier_slug": "fw",
+              "carrier_id": 4,
+              "carrier_name": "Fastway",
+              "service_id": 18,
+              "service_name": "BROWN",
+              "service_slug": "fw-brown",
+              "service_full_name": "Local Parcel",
+              "service_sla_text": "Same day",
+              "service_transit_days": 0,
+              "collection_cutoff_time": "14:00",
+              "latest_delivery_time": "18:00"
+            }
+          ],
+          "parcels": [
+            {
+              "id": "12345_1",
+              "parcel_number": "",
+              "reference": "Parcel-REF-1",
+              "description": "Books",
+              "dimensions": {
+                "length": 30,
+                "width": 20,
+                "height": 10
+              },
+              "weight": 5
+            },
+            {
+              "id": "12345_2",
+              "parcel_number": "",
+              "reference": "Parcel-REF-2",
+              "description": "Clothes",
+              "dimensions": {
+                "length": 40,
+                "width": 25,
+                "height": 15
+              },
+              "weight": 7
+            }
+          ],
+          "tracking_log": [],
+          "labels": {},
+          "tracking_link": {}
         }
-      ],
-      "tracking_log": [],
-      "labels": {},
-      "tracking_link": {}
-    }
-    ```
-    </CodeGroup>
-
-    <CodeGroup title="Response" tag="200" label="Purchased">
-    ```json
-    {
-      "id": 1339657,
-      "waybill_number": "CTR492459759",
-      "created_at": "2025-02-14T06:20:26Z",
-      "last_updated_at": "2025-04-08T10:00:00Z",
-      "shipment_title": "Order #1234",
-      "shipment_type": "outbound",
-      "label_purchased": true,
-      "collection_date": "2025-02-14T10:00:00Z",
-      "billing": [
+        ```
+      </TabPanel>
+      <TabPanel>
+        ```json
         {
-          "transaction_id": 123456,
-          "timestamp": "2025-02-14T06:20:26Z",
-          "type": "invoice",
-          "description": "Shipment purchased",
-          "transaction_ex_vat": 55,
-          "transaction_vat": 8.25,
-          "transaction_inc_vat": 63.25,
-          "transaction_status": "wallet_debited"
-        }
-      ],
-      "sender": {
-        "name": "Ishmael Evans",
-        "contact": "0817553597",
-        "email": "ishmael@usecarter.com",
-        "collection_address": [
-          {
-            "address1": "Unit 12",
-            "address2": "26 Washington Rd",
-            "suburb": "Claremont",
-            "city": "Cape Town",
-            "province": "Western Cape",
-            "postal_code": "7780",
-            "country": "South Africa",
-            "full_address": "Unit 12, 26 Washington Rd, Claremont, Cape Town, 7780, South Africa",
-            "latitude": -33.9706,
-            "longitude": 18.4649,
-            "geocode_status": "partially_matched"
+          "id": 1339657,
+          "waybill_number": "CTR492459759",
+          "created_at": "2025-02-14T06:20:26Z",
+          "last_updated_at": "2025-04-08T10:00:00Z",
+          "shipment_title": "Order #1234",
+          "shipment_type": "outbound",
+          "label_purchased": true,
+          "collection_date": "2025-02-14T10:00:00Z",
+          "billing": [
+            {
+              "transaction_id": 123456,
+              "timestamp": "2025-02-14T06:20:26Z",
+              "type": "invoice",
+              "description": "Shipment purchased",
+              "transaction_ex_vat": 55,
+              "transaction_vat": 8.25,
+              "transaction_inc_vat": 63.25,
+              "transaction_status": "wallet_debited"
+            }
+          ],
+          "sender": {
+            "name": "Ishmael Evans",
+            "contact": "0817553597",
+            "email": "ishmael@usecarter.com",
+            "collection_address": [
+              {
+                "address1": "Unit 12",
+                "address2": "26 Washington Rd",
+                "suburb": "Claremont",
+                "city": "Cape Town",
+                "province": "Western Cape",
+                "postal_code": "7780",
+                "country": "South Africa",
+                "full_address": "Unit 12, 26 Washington Rd, Claremont, Cape Town, 7780, South Africa",
+                "latitude": -33.9706,
+                "longitude": 18.4649,
+                "geocode_status": "partially_matched"
+              }
+            ],
+            "pickup_instructions": "Call when arrived"
+          },
+          "receiver": {
+            "name": "Jane Smith",
+            "contact": "0787654321",
+            "email": "janesmith@example.com",
+            "delivery_address": {
+              "address1": "Tech Solutions Inc., Tech Park, Suite 500",
+              "address2": "12 Clyde Road",
+              "suburb": "Green Point",
+              "city": "Cape Town",
+              "province": "Western Cape",
+              "postal_code": "8005",
+              "country": "South Africa",
+              "full_address": "Tech Solutions Inc., Tech Park, Suite 500, 12 Clyde Road, Green Point, Cape Town, 8005, South Africa",
+              "latitude": -33.9095,
+              "longitude": 18.4155,
+              "geocode_status": "fully_matched"
+            },
+            "drop_off_instructions": "Ring the doorbell twice"
+          },
+          "latest_status": {
+            "primary_status": {
+              "status": "Collection approved",
+              "slug": "collection_approved",
+              "code": 3
+            },
+            "secondary_status": null
+          },
+          "services": [
+            {
+              "service_type": "shipment",
+              "carrier_slug": "fw",
+              "carrier_id": 4,
+              "carrier_name": "Fastway",
+              "carrier_contact_number": "0812345678",
+              "service_id": 18,
+              "service_name": "BROWN",
+              "service_slug": "fw-brown",
+              "service_full_name": "Local Parcel",
+              "service_sla_text": "Same day",
+              "service_transit_days": 0,
+              "collection_cutoff_time": "12:30",
+              "latest_delivery_time": "17:30"
+            }
+          ],
+          "parcels": [
+            {
+              "id": 40329,
+              "parcel_number": "CTR492459759_1",
+              "reference": "Parcel-REF-1",
+              "description": "Books",
+              "dimensions": {
+                "length": 30,
+                "width": 20,
+                "height": 10
+              },
+              "weight": 5
+            },
+            {
+              "id": 40330,
+              "parcel_number": "CTR492459759_2",
+              "reference": "Parcel-REF-2",
+              "description": "Clothes",
+              "dimensions": {
+                "length": 40,
+                "width": 25,
+                "height": 15
+              },
+              "weight": 7
+            }
+          ],
+          "tracking_log": [
+            {
+              "timestamp": "2025-04-06T22:48:00Z",
+              "primary_status": {
+                "status": "Pending",
+                "slug": "pending",
+                "code": 1
+              },
+              "secondary_status": null,
+              "comments": "Created by admin user",
+              "location": ""
+            },
+            {
+              "timestamp": "2025-04-06T22:51:00Z",
+              "primary_status": {
+                "status": "Collection requested",
+                "slug": "collection_requested",
+                "code": 2
+              },
+              "secondary_status": null,
+              "comments": "For collection on Mon, 07 Apr",
+              "location": ""
+            },
+            {
+              "timestamp": "2025-04-06T22:51:00Z",
+              "primary_status": {
+                "status": "Collection approved",
+                "slug": "collection_approved",
+                "code": 3
+              },
+              "secondary_status": null,
+              "comments": "Carrier collecting on Mon, 07 Apr",
+              "location": ""
+            }
+          ],
+          "est_delivery": {
+            "est_delivery_date": "2025-04-07",
+            "est_delivery_time": "17:30:00",
+            "est_delivery_text": "Monday, 7th April before 5:30 PM"
+          },
+          "labels": {
+            "a4_page": "https://evership.app/label/a4/CTR492459759",
+            "10_by_10": "https://evership.app/label/10x10/CTR492459759",
+            "10_by_15": "https://evership.app/label/10x15/CTR492459759"
+          },
+          "tracking_link": {
+            "receiver": "https://ship.evership.app/gs7fh7",
+            "sender": "https://ship.evership.app/5rlyg6"
           }
-        ],
-        "pickup_instructions": "Call when arrived"
-      },
-      "receiver": {
-        "name": "Jane Smith",
-        "contact": "0787654321",
-        "email": "janesmith@example.com",
-        "delivery_address": {
-          "address1": "Tech Solutions Inc., Tech Park, Suite 500",
-          "address2": "12 Clyde Road",
-          "suburb": "Green Point",
-          "city": "Cape Town",
-          "province": "Western Cape",
-          "postal_code": "8005",
-          "country": "South Africa",
-          "full_address": "Tech Solutions Inc., Tech Park, Suite 500, 12 Clyde Road, Green Point, Cape Town, 8005, South Africa",
-          "latitude": -33.9095,
-          "longitude": 18.4155,
-          "geocode_status": "fully_matched"
-        },
-        "drop_off_instructions": "Ring the doorbell twice"
-      },
-      "latest_status": {
-        "primary_status": {
-          "status": "Collection approved",
-          "slug": "collection_approved",
-          "code": 3
-        },
-        "secondary_status": null
-      },
-      "services": [
-        {
-          "service_type": "shipment",
-          "carrier_slug": "fw",
-          "carrier_id": 4,
-          "carrier_name": "Fastway",
-          "carrier_contact_number": "0812345678",
-          "service_id": 18,
-          "service_name": "BROWN",
-          "service_slug": "fw-brown",
-          "service_full_name": "Local Parcel",
-          "service_sla_text": "Same day",
-          "service_transit_days": 0,
-          "collection_cutoff_time": "12:30",
-          "latest_delivery_time": "17:30"
         }
-      ],
-      "parcels": [
-        {
-          "id": 40329,
-          "parcel_number": "CTR492459759_1",
-          "reference": "Parcel-REF-1",
-          "description": "Books",
-          "dimensions": {
-            "length": 30,
-            "width": 20,
-            "height": 10
-          },
-          "weight": 5
-        },
-        {
-          "id": 40330,
-          "parcel_number": "CTR492459759_2",
-          "reference": "Parcel-REF-2",
-          "description": "Clothes",
-          "dimensions": {
-            "length": 40,
-            "width": 25,
-            "height": 15
-          },
-          "weight": 7
-        }
-      ],
-      "tracking_log": [
-        {
-          "timestamp": "2025-04-06T22:48:00Z",
-          "primary_status": {
-            "status": "Pending",
-            "slug": "pending",
-            "code": 1
-          },
-          "secondary_status": null,
-          "comments": "Created by admin user",
-          "location": ""
-        },
-        {
-          "timestamp": "2025-04-06T22:51:00Z",
-          "primary_status": {
-            "status": "Collection requested",
-            "slug": "collection_requested",
-            "code": 2
-          },
-          "secondary_status": null,
-          "comments": "For collection on Mon, 07 Apr",
-          "location": ""
-        },
-        {
-          "timestamp": "2025-04-06T22:51:00Z",
-          "primary_status": {
-            "status": "Collection approved",
-            "slug": "collection_approved",
-            "code": 3
-          },
-          "secondary_status": null,
-          "comments": "Carrier collecting on Mon, 07 Apr",
-          "location": ""
-        }
-      ],
-      "est_delivery": {
-        "est_delivery_date": "2025-04-07",
-        "est_delivery_time": "17:30:00",
-        "est_delivery_text": "Monday, 7th April before 5:30 PM"
-      },
-      "labels": {
-        "a4_page": "https://evership.app/label/a4/CTR492459759",
-        "10_by_10": "https://evership.app/label/10x10/CTR492459759",
-        "10_by_15": "https://evership.app/label/10x15/CTR492459759"
-      },
-      "tracking_link": {
-        "receiver": "https://ship.evership.app/gs7fh7",
-        "sender": "https://ship.evership.app/5rlyg6"
-      }
-    }
-    ```
-    </CodeGroup>
+        ```
+      </TabPanel>
+    </Tabs>
   </Col>
 </Row>
