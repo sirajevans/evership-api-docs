@@ -214,7 +214,7 @@ This "Get Rates" endpoint allows an admin or system user to retrieve the availab
 
 --- 
 
-## Validate address {{ tag: 'POST', label: 'https://api.evership.app/rates' }}
+## Validate address {{ tag: 'GET', label: 'https://api.evership.app/v1/validate-address' }}
 
 <Row>
   <Col>
@@ -329,7 +329,7 @@ This "Get Rates" endpoint allows an admin or system user to retrieve the availab
   <Col sticky>
     
     ### Example Request
-    <CodeGroup title="Request" tag="GET" label="https://api.evership.app/v1/validate-address">
+    <CodeGroup title="Request" tag="GET" label="/validate-address">
     ```
     GET https://api.evership.app/v1/validate-address?address1=Unit%2012&address2=113%20Loop%20St&suburb=Cape%20Town&province=Western%20Cape&postal_code=8000&country=South%20Africa
     ```
