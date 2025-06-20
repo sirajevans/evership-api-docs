@@ -1,113 +1,105 @@
 export const metadata = {
-  title: 'Conversations',
+  title: 'Shipments',
   description:
-    'On this page, we’ll dive into the different conversation endpoints you can use to manage conversations programmatically.',
+    'On this page, we'll dive into the different shipment endpoints you can use to manage shipments programmatically.',
 }
 
-# Conversations
+# Shipments
 
-Conversations are an essential part of Protocol — they are the containers for the messages between you, your contacts, and groups. On this page, we’ll dive into the different conversation endpoints you can use to manage conversations programmatically. We'll look at how to query, create, update, and delete conversations. {{ className: 'lead' }}
+Shipments are the core records in Evership — they represent the packages being prepared for delivery, including the sender and recipient information, parcel dimensions, and selected shipping service. On this page, we’ll explore the endpoints available for managing shipments programmatically. You can create, retrieve, update, purchase, cancel, and delete shipments through the API.
+## The shipment model
 
-## The conversation model
-
-The conversation model contains all the information about the conversations between you and your contacts. In addition, conversations can also be group-based with more than one contact, they can have a pinned message, and they can be muted.
+The shipment model stores all the details needed to fulfill and track a shipment. Each shipment must have a collection and delivery address, at least one parcel, and can optionally include metadata like order number or customer contact information. Shipments can be created in a pending state or immediately purchased if a rate is available.
 
 ### Properties
 
 <Properties>
   <Property name="id" type="string">
-    Unique identifier for the conversation.
+    Unique identifier for the shipment.
   </Property>
-  <Property name="contact_id" type="string">
-    Unique identifier for the other contact in the conversation.
-  </Property>
-  <Property name="group_id" type="string">
-    Unique identifier for the group that the conversation belongs to.
-  </Property>
-  <Property name="pinned_message_id" type="string">
-    Unique identifier for the pinned message.
-  </Property>
-  <Property name="is_pinned" type="boolean">
-    Whether or not the conversation has been pinned.
-  </Property>
-  <Property name="is_muted" type="boolean">
-    Whether or not the conversation has been muted.
-  </Property>
-  <Property name="last_active_at" type="timestamp">
-    Timestamp of when the conversation was last active.
-  </Property>
-  <Property name="last_opened_at" type="timestamp">
-    Timestamp of when the conversation was last opened by the authenticated
-    user.
+  <Property name="state" type="string">
+    Current state of the shipment (pending, purchased, cancelled).
   </Property>
   <Property name="created_at" type="timestamp">
-    Timestamp of when the conversation was created.
+    Timestamp when the shipment was created.
   </Property>
-  <Property name="archived_at" type="timestamp">
-    Timestamp of when the conversation was archived.
+  <Property name="collection_address" type="object">
+    Address from where the parcel will be collected.
+  </Property>
+  <Property name="delivery_address" type="object">
+    Address where the parcel will be delivered.
+  </Property>
+  <Property name="parcels" type="array">
+    List of parcels included in the shipment, including quantity, weight, and dimensions.
+  </Property>
+  <Property name="metadata" type="object">
+    Optional object containing order details like customer name, phone, email, or reference numbers.
+  </Property>
+  <Property name="label_url" type="string">
+    (If purchased) URL to download the shipment label.
+  </Property>
+  <Property name="tracking_number" type="string">
+    (If purchased) Carrier-provided tracking number.
+  </Property>
+  <Property name="rate_selected" type="object">
+    (If purchased) Details of the rate used to purchase the shipment, including provider, service, and price.
   </Property>
 </Properties>
 
 ---
 
-## List all conversations {{ tag: 'GET', label: '/v1/conversations' }}
+## List all shipments {{ tag: 'GET', label: '/v1/shipments' }}
 
 <Row>
   <Col>
 
-    This endpoint allows you to retrieve a paginated list of all your conversations. By default, a maximum of ten conversations are shown per page.
+    This endpoint allows you to retrieve a paginated list of all your shipments. By default, a maximum of ten shipments are shown per page.
 
     ### Optional attributes
 
     <Properties>
       <Property name="limit" type="integer">
-        Limit the number of conversations returned.
+        Limit the number of shipments returned.
       </Property>
-      <Property name="muted" type="boolean">
-        Only show conversations that are muted when set to `true`.
+      <Property name="status" type="string">
+        Filter shipments by status (e.g. pending, purchased, cancelled).
       </Property>
-      <Property name="archived" type="boolean">
-        Only show conversations that are archived when set to `true`.
-      </Property>
-      <Property name="pinned" type="boolean">
-        Only show conversations that are pinned when set to `true`.
-      </Property>
-      <Property name="group_id" type="string">
-        Only show conversations for the specified group.
+      <Property name="created_at" type="timestamp">
+        Filter shipments created at a specific time.
       </Property>
     </Properties>
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/conversations">
+    <CodeGroup title="Request" tag="GET" label="/v1/shipments">
 
     ```bash {{ title: 'cURL' }}
-    curl -G https://api.protocol.chat/v1/conversations \
+    curl -G https://api.evership.app/v1/shipments \
       -H "Authorization: Bearer {token}" \
       -d limit=10
     ```
 
     ```js
-    import ApiClient from '@example/protocol-api'
+    import ApiClient from '@evership/api-client'
 
     const client = new ApiClient(token)
 
-    await client.conversations.list()
+    await client.shipments.list()
     ```
 
     ```python
-    from protocol_api import ApiClient
+    from evership_api import ApiClient
 
     client = ApiClient(token)
 
-    client.conversations.list()
+    client.shipments.list()
     ```
 
     ```php
-    $client = new \Protocol\ApiClient($token);
+    $client = new \Evership\ApiClient($token);
 
-    $client->conversations->list();
+    $client->shipments->list();
     ```
 
     </CodeGroup>
@@ -117,19 +109,19 @@ The conversation model contains all the information about the conversations betw
       "has_more": false,
       "data": [
         {
-          "id": "xgQQXg3hrtjh7AvZ",
-          "contact_id": "WAz8eIbvDR60rouK",
-          "group_id": null,
-          "pinned_message_id": null,
-          "is_pinned": false,
-          "is_muted": false,
-          "last_active_at": 705103200,
-          "last_opened_at": 705103200,
-          "created_at": 692233200,
-          "archived_at": null
+          "id": "shp_1234567890",
+          "status": "pending",
+          "collection_address": { /* ... */ },
+          "delivery_address": { /* ... */ },
+          "parcels": [ /* ... */ ],
+          "rates": [ /* ... */ ],
+          "selected_rate": null,
+          "tracking": null,
+          "created_at": 1710000000,
+          "updated_at": 1710000000
         },
         {
-          "id": "hSIhXBhNe8X1d8Et"
+          "id": "shp_0987654321"
           // ...
         }
       ]
@@ -141,58 +133,71 @@ The conversation model contains all the information about the conversations betw
 
 ---
 
-## Create a conversation {{ tag: 'POST', label: '/v1/conversations' }}
+## Create a shipment {{ tag: 'POST', label: '/v1/shipments' }}
 
 <Row>
   <Col>
 
-    This endpoint allows you to add a new conversation between you and a contact or group. A contact or group id is required to create a conversation.
+    This endpoint allows you to create a new shipment. You must provide the collection and delivery addresses, and at least one parcel.
 
     ### Required attributes
 
     <Properties>
-      <Property name="contact_id" type="string">
-        Unique identifier for the other contact in the conversation.
+      <Property name="collection_address" type="object">
+        The address from which the shipment will be collected.
       </Property>
-      <Property name="group_id" type="string">
-        Unique identifier for the group that the conversation belongs to.
+      <Property name="delivery_address" type="object">
+        The address to which the shipment will be delivered.
+      </Property>
+      <Property name="parcels" type="array">
+        List of parcel objects included in the shipment.
       </Property>
     </Properties>
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="POST" label="/v1/conversations">
+    <CodeGroup title="Request" tag="POST" label="/v1/shipments">
 
     ```bash {{ title: 'cURL' }}
-    curl https://api.protocol.chat/v1/conversations \
+    curl https://api.evership.app/v1/shipments \
       -H "Authorization: Bearer {token}" \
-      -d 'contact_id'="WAz8eIbvDR60rouK"
+      -d collection_address="..." \
+      -d delivery_address="..." \
+      -d parcels="..."
     ```
 
     ```js
-    import ApiClient from '@example/protocol-api'
+    import ApiClient from '@evership/api-client'
 
     const client = new ApiClient(token)
 
-    await client.conversations.create({
-      contact_id: 'WAz8eIbvDR60rouK',
+    await client.shipments.create({
+      collection_address: { /* ... */ },
+      delivery_address: { /* ... */ },
+      parcels: [ /* ... */ ]
     })
     ```
 
     ```python
-    from protocol_api import ApiClient
+    from evership_api import ApiClient
 
     client = ApiClient(token)
 
-    client.conversations.create(contact_id="WAz8eIbvDR60rouK")
+    client.shipments.create(
+      collection_address={...},
+      delivery_address={...},
+      parcels=[...],
+    )
     ```
 
     ```php
-    $client = new \Protocol\ApiClient($token);
+    $client = new \Evership\ApiClient($token);
 
-    $client->conversations->create([
-      'contact_id' => 'WAz8eIbvDR60rouK',
+    $client->shipments->create([
+      'collection_address' => [...],
+      'delivery_address' => [...],
+      'parcels' => [...],
     ]);
     ```
 
@@ -200,16 +205,16 @@ The conversation model contains all the information about the conversations betw
 
     ```json {{ title: 'Response' }}
     {
-      "id": "xgQQXg3hrtjh7AvZ",
-      "contact_id": "WAz8eIbvDR60rouK",
-      "group_id": null,
-      "pinned_message_id": null,
-      "is_pinned": false,
-      "is_muted": false,
-      "last_active_at": null,
-      "last_opened_at": null,
-      "created_at": 692233200,
-      "archived_at": null
+      "id": "shp_1234567890",
+      "status": "pending",
+      "collection_address": { /* ... */ },
+      "delivery_address": { /* ... */ },
+      "parcels": [ /* ... */ ],
+      "rates": [ /* ... */ ],
+      "selected_rate": null,
+      "tracking": null,
+      "created_at": 1710000000,
+      "updated_at": 1710000000
     }
     ```
 
@@ -218,59 +223,59 @@ The conversation model contains all the information about the conversations betw
 
 ---
 
-## Retrieve a conversation {{ tag: 'GET', label: '/v1/conversations/:id' }}
+## Retrieve a shipment {{ tag: 'GET', label: '/v1/shipments/:id' }}
 
 <Row>
   <Col>
 
-    This endpoint allows you to retrieve a conversation by providing the conversation id. Refer to [the list](#the-conversation-model) at the top of this page to see which properties are included with conversation objects.
+    This endpoint allows you to retrieve a shipment by providing the shipment id. Refer to [the list](#the-shipment-model) at the top of this page to see which properties are included with shipment objects.
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/conversations/xgQQXg3hrtjh7AvZ">
+    <CodeGroup title="Request" tag="GET" label="/v1/shipments/shp_1234567890">
 
     ```bash {{ title: 'cURL' }}
-    curl https://api.protocol.chat/v1/conversations/xgQQXg3hrtjh7AvZ \
+    curl https://api.evership.app/v1/shipments/shp_1234567890 \
       -H "Authorization: Bearer {token}"
     ```
 
     ```js
-    import ApiClient from '@example/protocol-api'
+    import ApiClient from '@evership/api-client'
 
     const client = new ApiClient(token)
 
-    await client.conversations.get('xgQQXg3hrtjh7AvZ')
+    await client.shipments.get('shp_1234567890')
     ```
 
     ```python
-    from protocol_api import ApiClient
+    from evership_api import ApiClient
 
     client = ApiClient(token)
 
-    client.conversations.get("xgQQXg3hrtjh7AvZ")
+    client.shipments.get("shp_1234567890")
     ```
 
     ```php
-    $client = new \Protocol\ApiClient($token);
+    $client = new \Evership\ApiClient($token);
 
-    $client->conversations->get('xgQQXg3hrtjh7AvZ');
+    $client->shipments->get('shp_1234567890');
     ```
 
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
     {
-      "id": "xgQQXg3hrtjh7AvZ",
-      "contact_id": "WAz8eIbvDR60rouK",
-      "group_id": null,
-      "pinned_message_id": null,
-      "is_pinned": false,
-      "is_muted": false,
-      "last_active_at": 705103200,
-      "last_opened_at": 705103200,
-      "created_at": 692233200,
-      "archived_at": null
+      "id": "shp_1234567890",
+      "status": "pending",
+      "collection_address": { /* ... */ },
+      "delivery_address": { /* ... */ },
+      "parcels": [ /* ... */ ],
+      "rates": [ /* ... */ ],
+      "selected_rate": null,
+      "tracking": null,
+      "created_at": 1710000000,
+      "updated_at": 1710000000
     }
     ```
 
@@ -279,64 +284,73 @@ The conversation model contains all the information about the conversations betw
 
 ---
 
-## Update a conversation {{ tag: 'PUT', label: '/v1/conversations/:id' }}
+## Update a shipment {{ tag: 'PUT', label: '/v1/shipments/:id' }}
 
 <Row>
   <Col>
 
-    This endpoint allows you to perform an update on a conversation. Examples of updates are pinning a message, muting or archiving the conversation, or pinning the conversation itself.
+    This endpoint allows you to perform an update on a shipment. Examples of updates are selecting a rate, updating the status, or updating the addresses.
 
     ### Optional attributes
 
     <Properties>
-      <Property name="pinned_message_id" type="string">
-        Unique identifier for the pinned message.
+      <Property name="status" type="string">
+        The current status of the shipment (e.g. pending, purchased, cancelled).
       </Property>
-      <Property name="is_pinned" type="boolean">
-        Whether or not the conversation has been pinned.
+      <Property name="collection_address" type="object">
+        The address from which the shipment will be collected.
       </Property>
-      <Property name="is_muted" type="boolean">
-        Whether or not the conversation has been muted.
+      <Property name="delivery_address" type="object">
+        The address to which the shipment will be delivered.
       </Property>
-      <Property name="archived_at" type="timestamp">
-        Timestamp of when the conversation was archived.
+      <Property name="parcels" type="array">
+        List of parcel objects included in the shipment.
+      </Property>
+      <Property name="rates" type="array">
+        List of available rates for the shipment.
+      </Property>
+      <Property name="selected_rate" type="object">
+        The rate selected for the shipment.
+      </Property>
+      <Property name="tracking" type="object">
+        Tracking information for the shipment.
       </Property>
     </Properties>
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/conversations/xgQQXg3hrtjh7AvZ">
+    <CodeGroup title="Request" tag="PUT" label="/v1/shipments/shp_1234567890">
 
     ```bash {{ title: 'cURL' }}
-    curl -X PUT https://api.protocol.chat/v1/conversations/xgQQXg3hrtjh7AvZ \
+    curl -X PUT https://api.evership.app/v1/shipments/shp_1234567890 \
       -H "Authorization: Bearer {token}" \
-      -d 'is_muted'=true
+      -d 'status'=purchased
     ```
 
     ```js
-    import ApiClient from '@example/protocol-api'
+    import ApiClient from '@evership/api-client'
 
     const client = new ApiClient(token)
 
-    await client.conversations.update('xgQQXg3hrtjh7AvZ', {
-        is_muted: true,
+    await client.shipments.update('shp_1234567890', {
+        status: 'purchased',
     })
     ```
 
     ```python
-    from protocol_api import ApiClient
+    from evership_api import ApiClient
 
     client = ApiClient(token)
 
-    client.conversations.update("xgQQXg3hrtjh7AvZ", is_muted=True)
+    client.shipments.update("shp_1234567890", status='purchased')
     ```
 
     ```php
-    $client = new \Protocol\ApiClient($token);
+    $client = new \Evership\ApiClient($token);
 
-    $client->conversations->update('xgQQXg3hrtjh7AvZ', [
-      'is_muted' => true,
+    $client->shipments->update('shp_1234567890', [
+      'status' => 'purchased',
     ]);
     ```
 
@@ -344,16 +358,16 @@ The conversation model contains all the information about the conversations betw
 
     ```json {{ title: 'Response' }}
     {
-      "id": "xgQQXg3hrtjh7AvZ",
-      "contact_id": "WAz8eIbvDR60rouK",
-      "group_id": null,
-      "pinned_message_id": null,
-      "is_pinned": false,
-      "is_muted": true,
-      "last_active_at": 705103200,
-      "last_opened_at": 705103200,
-      "created_at": 692233200,
-      "archived_at": null
+      "id": "shp_1234567890",
+      "status": "purchased",
+      "collection_address": { /* ... */ },
+      "delivery_address": { /* ... */ },
+      "parcels": [ /* ... */ ],
+      "rates": [ /* ... */ ],
+      "selected_rate": null,
+      "tracking": null,
+      "created_at": 1710000000,
+      "updated_at": 1710000000
     }
     ```
 
@@ -362,43 +376,43 @@ The conversation model contains all the information about the conversations betw
 
 ---
 
-## Delete a conversation {{ tag: 'DELETE', label: '/v1/conversations/:id' }}
+## Delete a shipment {{ tag: 'DELETE', label: '/v1/shipments/:id' }}
 
 <Row>
   <Col>
 
-    This endpoint allows you to delete your conversations in Protocol. Note: This will permanently delete the conversation and all its messages — archive it instead if you want to be able to restore it later.
+    This endpoint allows you to delete your shipments in Evership. Note: This will permanently delete the shipment and all its related data — archive it instead if you want to be able to restore it later.
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/conversations/xgQQXg3hrtjh7AvZ">
+    <CodeGroup title="Request" tag="DELETE" label="/v1/shipments/shp_1234567890">
 
     ```bash {{ title: 'cURL' }}
-    curl -X DELETE https://api.protocol.chat/v1/conversations/xgQQXg3hrtjh7AvZ \
+    curl -X DELETE https://api.evership.app/v1/shipments/shp_1234567890 \
       -H "Authorization: Bearer {token}"
     ```
 
     ```js
-    import ApiClient from '@example/protocol-api'
+    import ApiClient from '@evership/api-client'
 
     const client = new ApiClient(token)
 
-    await client.conversations.delete('xgQQXg3hrtjh7AvZ')
+    await client.shipments.delete('shp_1234567890')
     ```
 
     ```python
-    from protocol_api import ApiClient
+    from evership_api import ApiClient
 
     client = ApiClient(token)
 
-    client.conversations.delete("xgQQXg3hrtjh7AvZ")
+    client.shipments.delete("shp_1234567890")
     ```
 
     ```php
-    $client = new \Protocol\ApiClient($token);
+    $client = new \Evership\ApiClient($token);
 
-    $client->conversations->delete('xgQQXg3hrtjh7AvZ');
+    $client->shipments->delete('shp_1234567890');
     ```
 
     </CodeGroup>
