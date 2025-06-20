@@ -56,10 +56,10 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/messages',
-    name: 'Messages',
+    href: '/labels',
+    name: 'Labels',
     description:
-      'Learn about the message model and how to create, retrieve, update, delete, and list messages.',
+      'Learn about the label model and how to create, retrieve, update, delete, and list labels.',
     icon: EnvelopeIcon,
     pattern: {
       y: 32,
