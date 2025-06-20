@@ -196,6 +196,316 @@ The shipment model stores all the details needed to fulfill and track a shipment
       </Property>
     </Properties>
 
+  <div className="my-24"></div>
+
+  ### Response Fields
+  <Properties>
+    <Property name="id" type="integer" required>
+      Unique identifier for the shipment.
+    </Property>
+    <Property name="waybill_number" type="string" required>
+      Waybill number associated with the shipment.
+    </Property>
+    <Property name="created_at" type="string" required>
+      Timestamp of when the shipment was created.
+    </Property>
+    <Property name="last_updated_at" type="string" required>
+      Timestamp of the last update to the shipment.
+    </Property>
+    <Property name="shipment_title" type="string">
+      Title or identifier for the shipment.
+    </Property>
+    <Property name="shipment_type" type="string" required>
+      Type of shipment (<code>outbound</code>, <code>inbound</code>, <code>transfer</code>, <code>return</code>).
+    </Property>
+    <Property name="label_purchased" type="boolean" required>
+      Boolean indicating whether a shipping label has been purchased.
+    </Property>
+    <Property name="collection_date" type="string">
+      Date and time scheduled for collection of the shipment.
+    </Property>
+    <Property name="billing" type="array">
+      Array containing billing details related to the shipment.
+    </Property>
+    <Property name="billing[].transaction_id" type="integer">
+      Unique identifier for the billing transaction.
+    </Property>
+    <Property name="billing[].timestamp" type="string">
+      Timestamp of when the transaction occurred.
+    </Property>
+    <Property name="billing[].type" type="string">
+      Type of billing transaction (<code>invoice</code> or <code>credit</code>).
+    </Property>
+    <Property name="billing[].description" type="string">
+      Description of the billing transaction.
+    </Property>
+    <Property name="billing[].transaction_ex_vat" type="float">
+      Transaction amount excluding VAT.
+    </Property>
+    <Property name="billing[].transaction_vat" type="float">
+      VAT amount for the transaction.
+    </Property>
+    <Property name="billing[].transaction_inc_vat" type="float">
+      Transaction amount including VAT.
+    </Property>
+    <Property name="billing[].transaction_status" type="string">
+      Status of the transaction.<br/>
+      <ul>
+        <li><b>invoice</b> = <code>wallet_debited</code></li>
+        <li><b>credit</b> = <code>wallet_credited</code></li>
+      </ul>
+    </Property>
+    <Property name="sender" type="object" required>
+      Object containing information about the sender.
+    </Property>
+    <Property name="sender.name" type="string">
+      Name of the sender.
+    </Property>
+    <Property name="sender.contact" type="string">
+      Contact number of the sender.
+    </Property>
+    <Property name="sender.email" type="string">
+      Email address of the sender.
+    </Property>
+    <Property name="sender.collection_address" type="array">
+      Array containing the collection address details for the sender.
+    </Property>
+    <Property name="sender.collection_address[].address1" type="string">
+      First line of the collection address, typically including the unit, apartment name/number or business name.
+    </Property>
+    <Property name="sender.collection_address[].address2" type="string">
+      Second line of the collection address, typically including the street name and number.
+    </Property>
+    <Property name="sender.collection_address[].suburb" type="string">
+      Suburb of the collection address.
+    </Property>
+    <Property name="sender.collection_address[].city" type="string">
+      City of the collection address.
+    </Property>
+    <Property name="sender.collection_address[].province" type="string">
+      Province of the collection address.
+    </Property>
+    <Property name="sender.collection_address[].postal_code" type="string">
+      Postal code of the collection address.
+    </Property>
+    <Property name="sender.collection_address[].country" type="string">
+      Country of the collection address.
+    </Property>
+    <Property name="sender.collection_address[].full_address" type="string">
+      Full formatted address of the collection location.
+    </Property>
+    <Property name="sender.collection_address[].latitude" type="float">
+      Latitude coordinate of the collection address.
+    </Property>
+    <Property name="sender.collection_address[].longitude" type="float">
+      Longitude coordinate of the collection address.
+    </Property>
+    <Property name="sender.collection_address[].geocode_status" type="string">
+      Status of the geocoding process for the collection address.
+    </Property>
+    <Property name="sender.pickup_instructions" type="string">
+      Special instructions for pickup at the sender's location.
+    </Property>
+    <Property name="receiver" type="object" required>
+      Object containing information about the receiver.
+    </Property>
+    <Property name="receiver.name" type="string">
+      Name of the receiver.
+    </Property>
+    <Property name="receiver.contact" type="string">
+      Contact number of the receiver.
+    </Property>
+    <Property name="receiver.email" type="string">
+      Email address of the receiver.
+    </Property>
+    <Property name="receiver.delivery_address" type="object">
+      Object containing the delivery address details for the receiver.
+    </Property>
+    <Property name="receiver.delivery_address.address1" type="string">
+      First line of the delivery address, typically including the unit, apartment name/number or business name.
+    </Property>
+    <Property name="receiver.delivery_address.address2" type="string">
+      Second line of the delivery address, typically including the street name and number.
+    </Property>
+    <Property name="receiver.delivery_address.suburb" type="string">
+      Suburb of the delivery address.
+    </Property>
+    <Property name="receiver.delivery_address.city" type="string">
+      City of the delivery address.
+    </Property>
+    <Property name="receiver.delivery_address.province" type="string">
+      Province of the delivery address.
+    </Property>
+    <Property name="receiver.delivery_address.postal_code" type="string">
+      Postal code of the delivery address.
+    </Property>
+    <Property name="receiver.delivery_address.country" type="string">
+      Country of the delivery address.
+    </Property>
+    <Property name="receiver.delivery_address.full_address" type="string">
+      Full formatted address of the delivery location.
+    </Property>
+    <Property name="receiver.delivery_address.latitude" type="float">
+      Latitude coordinate of the delivery address.
+    </Property>
+    <Property name="receiver.delivery_address.longitude" type="float">
+      Longitude coordinate of the delivery address.
+    </Property>
+    <Property name="receiver.delivery_address.geocode_status" type="string">
+      Status of the geocoding process for the delivery address.
+    </Property>
+    <Property name="receiver.drop_off_instructions" type="string">
+      Special instructions for delivery at the receiver's location.
+    </Property>
+    <Property name="latest_status" type="object">
+      Object containing the latest status of the shipment.
+    </Property>
+    <Property name="latest_status.primary_status" type="object">
+      Object containing the primary status of the shipment.
+    </Property>
+    <Property name="latest_status.primary_status.status" type="string">
+      Current primary status of the shipment.
+    </Property>
+    <Property name="latest_status.primary_status.slug" type="string">
+      Slug identifier for the primary status.
+    </Property>
+    <Property name="latest_status.primary_status.code" type="integer">
+      Code representing the primary status.
+    </Property>
+    <Property name="latest_status.secondary_status" type="object">
+      Object containing the secondary status of the shipment (if applicable).
+    </Property>
+    <Property name="services" type="array">
+      Array of objects detailing the services used for the shipment.
+    </Property>
+    <Property name="services[].carrier_slug" type="string">
+      Slug identifier for the carrier.
+    </Property>
+    <Property name="services[].carrier_id" type="integer">
+      Unique identifier for the carrier.
+    </Property>
+    <Property name="services[].carrier_name" type="string">
+      Name of the carrier.
+    </Property>
+    <Property name="services[].carrier_contact_number" type="string">
+      Contact number for the carrier.
+    </Property>
+    <Property name="services[].service_id" type="integer">
+      Unique identifier for the service.
+    </Property>
+    <Property name="services[].service_name" type="string">
+      Name of the service.
+    </Property>
+    <Property name="services[].service_slug" type="string">
+      Slug identifier for the service.
+    </Property>
+    <Property name="services[].service_full_name" type="string">
+      Full name of the service.
+    </Property>
+    <Property name="services[].service_sla_text" type="string">
+      Service level agreement text (Same day, Next day, Economy etc).
+    </Property>
+    <Property name="services[].service_transit_days" type="integer">
+      Number of transit days for the service.
+    </Property>
+    <Property name="services[].collection_cutoff_time" type="string">
+      Cutoff time for collection for the service.
+    </Property>
+    <Property name="services[].latest_delivery_time" type="string">
+      Latest time by which the delivery is expected to be completed.
+    </Property>
+    <Property name="parcels" type="array" required>
+      Array of objects, each containing details about a parcel in the shipment.
+    </Property>
+    <Property name="parcels[].id" type="string">
+      Unique identifier for the parcel.
+    </Property>
+    <Property name="parcels[].parcel_number" type="string">
+      Unique number assigned to the parcel.
+    </Property>
+    <Property name="parcels[].reference" type="string">
+      Reference identifier for the parcel.
+    </Property>
+    <Property name="parcels[].description" type="string">
+      Description of the parcel contents.
+    </Property>
+    <Property name="parcels[].dimensions" type="object" required>
+      Object containing the dimensions of the parcel.
+    </Property>
+    <Property name="parcels[].dimensions.length" type="float" required>
+      Length of the parcel in centimeters.
+    </Property>
+    <Property name="parcels[].dimensions.width" type="float" required>
+      Width of the parcel in centimeters.
+    </Property>
+    <Property name="parcels[].dimensions.height" type="float" required>
+      Height of the parcel in centimeters.
+    </Property>
+    <Property name="parcels[].weight" type="float" required>
+      Weight of the parcel in kilograms.
+    </Property>
+    <Property name="tracking_log" type="array">
+      Array of objects containing tracking log entries for the shipment.
+    </Property>
+    <Property name="tracking_log[].timestamp" type="string">
+      Timestamp of the tracking log entry.
+    </Property>
+    <Property name="tracking_log[].primary_status" type="object">
+      Object containing the primary status of the tracking log entry.
+    </Property>
+    <Property name="tracking_log[].primary_status.status" type="string">
+      Primary status of the shipment at the time of the log entry.
+    </Property>
+    <Property name="tracking_log[].primary_status.slug" type="string">
+      Slug identifier for the primary status.
+    </Property>
+    <Property name="tracking_log[].primary_status.code" type="integer">
+      Code representing the primary status.
+    </Property>
+    <Property name="tracking_log[].secondary_status" type="object">
+      Object containing the secondary status of the tracking log entry (if applicable).
+    </Property>
+    <Property name="tracking_log[].comments" type="string">
+      Comments or additional information related to the tracking log entry.
+    </Property>
+    <Property name="tracking_log[].location" type="string">
+      Location associated with the tracking log entry.
+    </Property>
+    <Property name="est_delivery" type="object">
+      Object containing estimated delivery details.
+    </Property>
+    <Property name="est_delivery.est_delivery_date" type="string">
+      Estimated delivery date.
+    </Property>
+    <Property name="est_delivery.est_delivery_time" type="string">
+      Estimated delivery time.
+    </Property>
+    <Property name="est_delivery.est_delivery_text" type="string">
+      Formatted string describing the estimated delivery date and time.
+    </Property>
+    <Property name="labels" type="object">
+      Object containing URLs for different label formats.
+    </Property>
+    <Property name="labels.a4_page" type="string">
+      URL for the A4 page label format.
+    </Property>
+    <Property name="labels.10_by_10" type="string">
+      URL for the 10x10cm label format.
+    </Property>
+    <Property name="labels.10_by_15" type="string">
+      URL for the 10x15cm label format.
+    </Property>
+    <Property name="tracking_link" type="object">
+      Object containing tracking links for the shipment.
+    </Property>
+    <Property name="tracking_link.receiver" type="string">
+      URL for the receiver's tracking link.
+    </Property>
+    <Property name="tracking_link.sender" type="string">
+      URL for the sender's tracking link.
+    </Property>
+  </Properties>
+
   </Col>
   <Col sticky>
 
@@ -272,8 +582,9 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
   </CodeGroup>
 
-    <CodeGroup title="Response" tag="200" label="Pending">
-    ```json
+    <CodeGroup title="Response" tag="200" label="Response">
+
+    ```json {{ title: 'Created draft' }}
     {
       "id": 1339657,
       "waybill_number": "",
@@ -377,10 +688,8 @@ The shipment model stores all the details needed to fulfill and track a shipment
       "tracking_link": {}
     }
     ```
-    </CodeGroup>
 
-    <CodeGroup title="Response" tag="200" label="Purchased">
-    ```json
+    ```json {{ title: 'Created purchased' }}
     {
       "id": 1339657,
       "waybill_number": "CTR492459759",
