@@ -9,41 +9,7 @@ This "Get Rates" endpoint allows an admin or system user to retrieve the availab
 <Row>
   <Col>
     
-    ### Example Payload
-    
-    <CodeGroup title="Request" tag="POST" label="/rates">
-
-    ```json
-    {
-      "collection_address": {
-        "line1": "Unit 3",
-        "line2": "Black River Park",
-        "city": "Cape Town",
-        "postal_code": "7925",
-        "state": "Western Cape",
-        "country": "ZA"
-      },
-      "delivery_address": {
-        "line1": "14 Long Street",
-        "line2": "",
-        "city": "Cape Town",
-        "postal_code": "8001",
-        "state": "Western Cape",
-        "country": "ZA"
-      },
-      "parcels": [
-        {
-          "quantity": 1,
-          "weight": 1,
-          "height": 10,
-          "width": 10,
-          "length": 10
-        }
-      ],
-      "service_codes": ["Express-001"]
-    }
-    ```
-    </CodeGroup>
+    This endpoint allows you to retrieve available delivery options, rates, and providers for a given collection and delivery address.
 
     ### Request Fields
     <Properties>
@@ -108,6 +74,40 @@ This "Get Rates" endpoint allows an admin or system user to retrieve the availab
 
   </Col>
   <Col sticky>
+    
+    ### Example Request
+    <CodeGroup title="Request" tag="POST" label="/rates">
+    ```json
+    {
+      "collection_address": {
+        "line1": "Unit 3",
+        "line2": "Black River Park",
+        "city": "Cape Town",
+        "postal_code": "7925",
+        "state": "Western Cape",
+        "country": "ZA"
+      },
+      "delivery_address": {
+        "line1": "14 Long Street",
+        "line2": "",
+        "city": "Cape Town",
+        "postal_code": "8001",
+        "state": "Western Cape",
+        "country": "ZA"
+      },
+      "parcels": [
+        {
+          "quantity": 1,
+          "weight": 1,
+          "height": 10,
+          "width": 10,
+          "length": 10
+        }
+      ],
+      "service_codes": ["Express-001"]
+    }
+    ```
+    </CodeGroup>
 
     ### Successful Response
     <CodeGroup title="Response" tag="200" label="Success">
