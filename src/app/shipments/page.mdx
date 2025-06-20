@@ -1,12 +1,10 @@
 # Shipments
-
 Shipments are the core records in Evership — they represent the packages being prepared for delivery, including the sender and recipient information, parcel dimensions, and selected shipping service. On this page, we'll explore the endpoints available for managing shipments programmatically. You can create, retrieve, update, purchase, cancel, and delete shipments through the API.
-## The shipment model
 
+## The shipment model
 The shipment model stores all the details needed to fulfill and track a shipment. Each shipment must have a collection and delivery address, at least one parcel, and can optionally include metadata like order number or customer contact information. Shipments can be created in a pending state or immediately purchased if a rate is available.
 
 ### Properties
-
 <Properties>
   <Property name="id" type="string">
     Unique identifier for the shipment.
@@ -196,7 +194,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
       </Property>
     </Properties>
 
-  <div className="my-24"></div>
+  <div className="my-18"></div>
 
   ### Response Fields
   <Properties>
@@ -883,7 +881,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
       </Property>
     </Properties>
 
-    <div className="my-24"></div>
+    <div className="my-18"></div>
 
     ### Response Fields
     <Properties>
@@ -936,7 +934,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
     </CodeGroup>
 
     <CodeGroup title="Response" tag="200" label="Success">
-    ```json
+    ```json {{ title: 'Success' }}
     {
       "status": "success",
       "purchased_shipments": [
@@ -1052,7 +1050,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
       </Property>
     </Properties>
 
-    <div className="my-24"></div>
+    <div className="my-18"></div>
 
     ### Response Fields
     <Properties>
@@ -1212,7 +1210,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
       </Property>
     </Properties>
 
-    <div className="my-24"></div>
+    <div className="my-18"></div>
 
     ### Response Fields
     <Properties>
@@ -1381,7 +1379,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
       </Property>
     </Properties>
 
-    <div className="my-24"></div>
+    <div className="my-18"></div>
 
     ### Response Fields
     <Properties>
@@ -1543,151 +1541,252 @@ The shipment model stores all the details needed to fulfill and track a shipment
 <Row>
   <Col>
 
-    This "Cancel shipment" API will allow you to cancel a single shipment that has been purchased but not collected by the carrier (status = `requested` or `approved`) by passing the `shipment_id` of the shipment you want to cancel.
+    This "Cancel shipment" API allows you to cancel a single shipment that has been purchased but not yet collected by the carrier (status = `requested` or `approved`) by passing the `shipment_id` of the shipment you want to cancel.
 
-    In the case that you try to cancel a shipment that has a status = `pending` then we will return an error message, because the shipment has not been purchased yet.
-    In the case that you try to cancel a shipment record where the status of the shipment ≠ `requested` or `approved` then we will return an error message, because this means that the shipment has already been collected by the carrier.
+    If you try to cancel a shipment with status = `pending`, an error message will be returned because the shipment has not been purchased yet.
+    If you try to cancel a shipment where the status is not `requested` or `approved`, an error message will be returned because the shipment has already been collected by the carrier.
 
-    ### Request fields
+    ### Request Fields
     <Properties>
-      <Property name="shipment_id" type="string">
-        The unique shipment_id of the shipment that the developer wants to cancel
+      <Property name="shipment_id" type="string" required>
+        The unique shipment_id of the shipment to cancel.
       </Property>
     </Properties>
 
-    <div className="my-24"></div>
+    <div className="my-18"></div>
 
     ### Response Fields
     <Properties>
       <Property name="status" type="string">
-        Status of the response, e.g. success
+        Status of the response, e.g. "success" or "error".
       </Property>
-      <Property name="shipments" type="array">
-        Array of shipment records matching the query
+      <Property name="shipment" type="object">
+        The cancelled shipment record.
       </Property>
-      <Property name="shipments[].id" type="string">
-        Unique ID of the shipment
+      <Property name="shipment.id" type="string">
+        Unique ID of the shipment.
       </Property>
-      <Property name="shipments[].state" type="string">
-        Shipment state (pending, purchased, cancelled)
+      <Property name="shipment.state" type="string">
+        Shipment state (pending, purchased, cancelled).
       </Property>
-      <Property name="shipments[].tracking_number" type="string">
-        Carrier tracking number (if purchased)
+      <Property name="shipment.tracking_number" type="string">
+        Carrier tracking number (if purchased).
       </Property>
-      <Property name="shipments[].label_url" type="string">
-        Label download URL (if purchased)
+      <Property name="shipment.label_url" type="string">
+        Label download URL (if purchased).
       </Property>
-      <Property name="shipments[].collection_address" type="object">
-        Address object where the parcel is collected
+      <Property name="shipment.collection_address" type="object">
+        Address object where the parcel is collected.
       </Property>
-      <Property name="shipments[].delivery_address" type="object">
-        Address object where the parcel is delivered
+      <Property name="shipment.delivery_address" type="object">
+        Address object where the parcel is delivered.
       </Property>
-      <Property name="shipments[].parcels" type="array">
-        Array of parcel data (quantity, size, weight)
+      <Property name="shipment.parcels" type="array">
+        Array of parcel data (quantity, size, weight).
       </Property>
-      <Property name="shipments[].metadata.order_number" type="string">
-        Order number from metadata
+      <Property name="shipment.metadata.order_number" type="string">
+        Order number from metadata.
       </Property>
-      <Property name="shipments[].metadata.customer_name" type="string">
-        Name of the customer
+      <Property name="shipment.metadata.customer_name" type="string">
+        Name of the customer.
       </Property>
-      <Property name="shipments[].metadata.customer_email" type="string">
-        Email of the customer
-      </Property>
-      <Property name="pagination.limit" type="integer">
-        Limit set in the request
-      </Property>
-      <Property name="pagination.cursor" type="string">
-        Cursor token used for pagination (send as query param in next request)
+      <Property name="shipment.metadata.customer_email" type="string">
+        Email of the customer.
       </Property>
     </Properties>
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/list-shipments">
+    <CodeGroup title="Request" tag="POST" label="/v1/cancel-shipment/{shipment_id}">
     ```bash
-    GET https://api.evership.app/shipments/{shipment_id}
+    POST https://www.api.evership.co.za/v1/cancel-shipment/{shipment_id}
     ```
     </CodeGroup>
-    <CodeGroup title="Response">
-      
-      ```json {"title": "Success"}
-      {
-        "id": 1339657,
-        "cancellation_status": "success",
-        "status": {
-          "primary": {
-            "status": "cancelled",
-            "code": "12"
-          },
-          "secondary": {
-            "status": "cancelled_user",
-            "code": "12A"
-          }
-        },
-        "cancellation_timestamp": "2025-03-09T12:00:00+10:30",
-        "message": "The shipment has been cancelled successfully."
-      }
-      ```
 
-      ```json {"title": "Failed (pending)"}
-      {
-        "id": 1339657,
-        "cancellation_status": "failed_shipment_unpurchased",
-        "status": {
-          "primary": {
-            "status": "pending",
-            "code": "1"
-          },
-          "secondary": {
-            "status": "",
-            "code": ""
-          }
-        },
-        "cancellation_timestamp": "",
-        "message": "This shipment could not be cancelled as it has not been purchased yet."
-      }
-      ```
+    <CodeGroup title="Response" tag="200" label="Success">
 
-      ```json {"title": "Failed (Status)"}
-      {
-        "id": 1339657,
-        "cancellation_status": "failed",
-        "status": {
-          "primary": {
-            "status": "out_for_delivery",
-            "code": "8"
-          },
-          "secondary": {
-            "status": "arrived_deliver",
-            "code": "8A"
-          }
+    ```bash {{ title: 'Success' }}
+    {
+      "id": 1339657,
+      "cancellation_status": "success",
+      "status": {
+        "primary": {
+          "status": "cancelled",
+          "code": "12"
         },
-        "cancellation_timestamp": "",
-        "message": "This shipment could not be cancelled, please reach out to our support team for assistance."
-      }
-      ```
+        "secondary": {
+          "status": "cancelled_user",
+          "code": "12A"
+        }
+      },
+      "cancellation_timestamp": "2025-03-09T12:00:00+10:30",
+      "message": "The shipment has been cancelled successfully."
+    }
+    ```
 
-      ```json {"title": "Failed (Cancelled)"}
-      {
-        "id": 1339657,
-        "cancellation_status": "failed_shipment_already_cancelled",
-        "status": {
-          "primary": {
-            "status": "cancelled",
-            "code": "12"
-          },
-          "secondary": {
-            "status": "cancelled_user",
-            "code": "12A"
-          }
+    ```bash {{ title: 'Failed (P)' }}
+    {
+      "id": 1339657,
+      "cancellation_status": "failed_shipment_unpurchased",
+      "status": {
+        "primary": {
+          "status": "pending",
+          "code": "1"
         },
-        "cancellation_timestamp": "2025-03-09T12:00:00+10:30",
-        "message": "This shipment has already been cancelled"
-      }
-      ```
+        "secondary": {
+          "status": "",
+          "code": ""
+        }
+      },
+      "cancellation_timestamp": "",
+      "message": "This shipment could not be cancelled as it has not been purchased yet."
+    }
+    ```
+
+    ```bash {{ title: 'Failed (S)' }}
+    {
+      "id": 1339657,
+      "cancellation_status": "failed",
+      "status": {
+        "primary": {
+          "status": "out_for_delivery",
+          "code": "8"
+        },
+        "secondary": {
+          "status": "arrived_deliver",
+          "code": "8A"
+        }
+      },
+      "cancellation_timestamp": "",
+      "message": "This shipment could not be cancelled, please reach out to our support team for assistance."
+    }
+    ```
+
+    ```bash {{ title: 'Failed (C)' }}
+    {
+      "id": 1339657,
+      "cancellation_status": "failed_shipment_already_cancelled",
+      "status": {
+        "primary": {
+          "status": "cancelled",
+          "code": "12"
+        },
+        "secondary": {
+          "status": "cancelled_user",
+          "code": "12A"
+        }
+      },
+      "cancellation_timestamp": "2025-03-09T12:00:00+10:30",
+      "message": "This shipment has already been cancelled"
+    }
+    ```
+
     </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## Delete Shipments {{ tag: 'DELETE', label: 'https://www.api.evership.co.za/v1/shipments?shipment_ids=12345,12346,12347' }}
+
+<Row>
+  <Col>
+
+    This "Delete shipments" API will allow you to delete either a single shipment or batch of shipments that have the pending status, and have not been purchased yet or have not been cancelled. If the shipment has been purchased or cancelled, it cannot be deleted and we will return an error response.
+    
+    ### Request Fields
+    <Properties>
+      <Property name="shipment_ids" type="string" required>
+        Comma-separated list of shipment IDs to be deleted. Each ID uniquely identifies a shipment to be deleted from the system.
+      </Property>
+    </Properties>
+
+    <div className="my-18"></div>
+
+    ### Response Fields
+    <Properties>
+      <Property name="status" type="string">
+        Status of the response, e.g. "success" or "error".
+      </Property>
+      <Property name="shipment" type="object">
+        The cancelled shipment record.
+      </Property>
+      <Property name="shipment.id" type="string">
+        Unique ID of the shipment.
+      </Property>
+      <Property name="shipment.state" type="string">
+        Shipment state (pending, purchased, cancelled).
+      </Property>
+      <Property name="shipment.tracking_number" type="string">
+        Carrier tracking number (if purchased).
+      </Property>
+      <Property name="shipment.label_url" type="string">
+        Label download URL (if purchased).
+      </Property>
+      <Property name="shipment.collection_address" type="object">
+        Address object where the parcel is collected.
+      </Property>
+      <Property name="shipment.delivery_address" type="object">
+        Address object where the parcel is delivered.
+      </Property>
+      <Property name="shipment.parcels" type="array">
+        Array of parcel data (quantity, size, weight).
+      </Property>
+      <Property name="shipment.metadata.order_number" type="string">
+        Order number from metadata.
+      </Property>
+      <Property name="shipment.metadata.customer_name" type="string">
+        Name of the customer.
+      </Property>
+      <Property name="shipment.metadata.customer_email" type="string">
+        Email of the customer.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/v1/cancel-shipment/{shipment_id}">
+    ```bash
+    DELETE https://www.api.evership.co.za/v1/shipments?shipment_ids=12345,12346,12347
+    ```
+    </CodeGroup>
+
+    <CodeGroup title="Response" tag="200" label="Success">
+    ```json
+    {
+      "summary": {
+        "total": 4,
+        "deleted": 1,
+        "failed": 3
+      },
+      "results": [
+        {
+          "shipment_id": "12345",
+          "status": "deleted"
+        },
+        {
+          "shipment_id": "12346",
+          "status": "not_found",
+          "error_message": "This shipment was not found"
+        },
+        {
+          "shipment_id": "12348",
+          "status": "cannot_delete_purchased",
+          "error_message": "This shipment cannot be deleted as it has been purchased"
+        },
+        {
+          "shipment_id": "12349",
+          "status": "cannot_delete_cancelled",
+          "error_message": "This shipment cannot be deleted as it has been cancelled"
+        }
+      ]
+    }
+    ```
+
+    </CodeGroup>
+
   </Col>
 </Row>
