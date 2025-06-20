@@ -72,6 +72,46 @@ This "Get Rates" endpoint allows an admin or system user to retrieve the availab
       </Property>
     </Properties>
 
+    ### Response Fields
+    <Properties>
+      <Property name="status">
+        Indicates success or failure (success, error)
+      </Property>
+      <Property name="timestamp">
+        Time the response was generated
+      </Property>
+      <Property name="collection_address">
+        Normalized version of the input collection address
+      </Property>
+      <Property name="delivery_address">
+        Normalized version of the input delivery address
+      </Property>
+      <Property name="rates">
+        Array of available shipping options
+      </Property>
+      <Property name="rates[].provider">
+        Carrier name (e.g. "The Courier Guy")
+      </Property>
+      <Property name="rates[].service">
+        Service name (e.g. "Express")
+      </Property>
+      <Property name="rates[].service_code">
+        Internal service code used by Evership
+      </Property>
+      <Property name="rates[].currency">
+        3-letter currency code (e.g. ZAR)
+      </Property>
+      <Property name="rates[].amount">
+        Shipping cost
+      </Property>
+      <Property name="rates[].estimated_delivery">
+        Estimated delivery date/time in ISO 8601 format
+      </Property>
+      <Property name="rates[].cutoff_time">
+        Latest time to book for same-day dispatch
+      </Property>
+    </Properties>
+
   </Col>
   <Col sticky>
     
@@ -166,46 +206,6 @@ This "Get Rates" endpoint allows an admin or system user to retrieve the availab
     }
     ```
     </CodeGroup>
-
-    ### Response Fields
-    <Properties>
-      <Property name="status">
-        Indicates success or failure (success, error)
-      </Property>
-      <Property name="timestamp">
-        Time the response was generated
-      </Property>
-      <Property name="collection_address">
-        Normalized version of the input collection address
-      </Property>
-      <Property name="delivery_address">
-        Normalized version of the input delivery address
-      </Property>
-      <Property name="rates">
-        Array of available shipping options
-      </Property>
-      <Property name="rates[].provider">
-        Carrier name (e.g. "The Courier Guy")
-      </Property>
-      <Property name="rates[].service">
-        Service name (e.g. "Express")
-      </Property>
-      <Property name="rates[].service_code">
-        Internal service code used by Evership
-      </Property>
-      <Property name="rates[].currency">
-        3-letter currency code (e.g. ZAR)
-      </Property>
-      <Property name="rates[].amount">
-        Shipping cost
-      </Property>
-      <Property name="rates[].estimated_delivery">
-        Estimated delivery date/time in ISO 8601 format
-      </Property>
-      <Property name="rates[].cutoff_time">
-        Latest time to book for same-day dispatch
-      </Property>
-    </Properties>
 
   </Col>
 </Row>
