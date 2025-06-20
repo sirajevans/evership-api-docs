@@ -252,6 +252,16 @@ export const navigation: Array<NavGroup> = [
       { title: 'Attachments', href: '/attachments' },
     ],
   },
+  {
+    title: 'Evership API',
+    links: [
+      { title: 'Base URL', href: '/api/base-url' },
+      { title: 'Rate API', href: '/api/rate' },
+      { title: 'Shipment API', href: '/api/shipment' },
+      { title: 'Labels API', href: '/api/labels' },
+      { title: 'Tracking API', href: '/api/tracking' },
+    ],
+  },
 ]
 
 export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {

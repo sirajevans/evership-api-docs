@@ -1,0 +1,33 @@
+---
+title: Shipment API
+---
+
+# 🚚 Shipment API
+
+## POST /shipments
+**Status:** In Progress  
+**Description:** Creates the shipment record in either a pending or purchased state
+
+## POST /purchase-shipment
+**Status:** In Progress  
+**Description:** Single or batch purchase of shipments that have already been created
+
+## PUT /shipments/{shipment_id}
+**Status:** In Progress  
+**Description:** Update a shipment record that is in a pending state
+
+## GET /list-shipments
+**Status:** In Progress  
+**Description:** Fetch shipment data for multiple records, with a paginated response
+
+## GET /shipments/{shipment_id}
+**Status:** In Progress  
+**Description:** Fetch shipment data for a single shipment record
+
+## POST /cancel-shipment/{shipment_id}
+**Status:** In Progress  
+**Description:** Cancel a purchased shipment, single shipment only
+
+## DELETE /shipments/{shipment_id}
+**Status:** In Progress  
+**Description:** Delete a single or batch of pending shipments that have not been purchased yet 
