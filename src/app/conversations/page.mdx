@@ -1,12 +1,6 @@
-export const metadata = {
-  title: 'Shipments',
-  description:
-    'On this page, we'll dive into the different shipment endpoints you can use to manage shipments programmatically.',
-}
-
 # Shipments
 
-Shipments are the core records in Evership — they represent the packages being prepared for delivery, including the sender and recipient information, parcel dimensions, and selected shipping service. On this page, we’ll explore the endpoints available for managing shipments programmatically. You can create, retrieve, update, purchase, cancel, and delete shipments through the API.
+Shipments are the core records in Evership — they represent the packages being prepared for delivery, including the sender and recipient information, parcel dimensions, and selected shipping service. On this page, we'll explore the endpoints available for managing shipments programmatically. You can create, retrieve, update, purchase, cancel, and delete shipments through the API.
 ## The shipment model
 
 The shipment model stores all the details needed to fulfill and track a shipment. Each shipment must have a collection and delivery address, at least one parcel, and can optionally include metadata like order number or customer contact information. Shipments can be created in a pending state or immediately purchased if a rate is available.
