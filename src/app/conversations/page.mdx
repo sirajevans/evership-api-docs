@@ -42,24 +42,157 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## List all shipments {{ tag: 'GET', label: '/v1/shipments' }}
+## Create Shipment {{ tag: 'POST', label: 'https://www.api.evership.co.za/v1/shipments' }}
 
 <Row>
   <Col>
 
-    This endpoint allows you to retrieve a paginated list of all your shipments. By default, a maximum of ten shipments are shown per page.
+    The “Create shipment” API will allow you to create a single shipment record on your account in either a pending or purchased state with a single call.  If the shipment is not purchased when the record is created you can purchase the shipment later using the [Purchase shipments](https://www.notion.so/Purchase-shipments-1d0f4d58d4e381cdb0a1f361936864af?pvs=21) API
 
-    ### Optional attributes
+    ### Request fields
 
     <Properties>
-      <Property name="limit" type="integer">
-        Limit the number of shipments returned.
+      <Property name="sender" type="object">
+        Object containing information about the sender.
       </Property>
-      <Property name="status" type="string">
-        Filter shipments by status (e.g. pending, purchased, cancelled).
+      <Property name="sender.name" type="string" required>
+        Name of the sender.
       </Property>
-      <Property name="created_at" type="timestamp">
-        Filter shipments created at a specific time.
+      <Property name="sender.contact" type="string" required>
+        Contact number of the sender. Format 0812345678, must contain at least 10 digits.
+      </Property>
+      <Property name="sender.email" type="string">
+        Email address of the sender.
+      </Property>
+      <Property name="sender.collection_address" type="object">
+        Object containing the collection address details for the sender.
+      </Property>
+      <Property name="sender.collection_address.address1" type="string">
+        First line of the address, typically including the unit or apartment number.
+      </Property>
+      <Property name="sender.collection_address.address2" type="string" required>
+        Second line of the address, typically including the street name and number.
+      </Property>
+      <Property name="sender.collection_address.suburb" type="string" required>
+        Suburb of the collection address.
+      </Property>
+      <Property name="sender.collection_address.city" type="string" required>
+        City of the collection address.
+      </Property>
+      <Property name="sender.collection_address.province" type="string" required>
+        Province of the collection address.
+      </Property>
+      <Property name="sender.collection_address.postal_code" type="string" required>
+        Postal code of the collection address.
+      </Property>
+      <Property name="sender.collection_address.country" type="string" required>
+        Country of the collection address.
+      </Property>
+      <Property name="sender.collection_address.full_address" type="string" required>
+        Full formatted address of the collection location.
+      </Property>
+      <Property name="sender.collection_address.latitude" type="float">
+        Latitude coordinate of the collection address. If not passed the address will be geocoded.
+      </Property>
+      <Property name="sender.collection_address.longitude" type="float">
+        Longitude coordinate of the collection address. If not passed the address will be geocoded.
+      </Property>
+      <Property name="sender.pickup_instructions" type="string">
+        Special instructions for pickup at the sender's location.
+      </Property>
+      <Property name="receiver" type="object">
+        Object containing information about the receiver.
+      </Property>
+      <Property name="receiver.name" type="string" required>
+        Name of the receiver.
+      </Property>
+      <Property name="receiver.contact" type="string" required>
+        Contact number of the receiver.
+      </Property>
+      <Property name="receiver.email" type="string">
+        Email address of the receiver.
+      </Property>
+      <Property name="receiver.delivery_address" type="object">
+        Object containing the delivery address details for the receiver.
+      </Property>
+      <Property name="receiver.delivery_address.address1" type="string">
+        First line of the address, typically including the unit or apartment number.
+      </Property>
+      <Property name="receiver.delivery_address.address2" type="string" required>
+        Second line of the address, typically including the street name and number.
+      </Property>
+      <Property name="receiver.delivery_address.suburb" type="string" required>
+        Suburb of the delivery address.
+      </Property>
+      <Property name="receiver.delivery_address.city" type="string" required>
+        City of the delivery address.
+      </Property>
+      <Property name="receiver.delivery_address.province" type="string" required>
+        Province of the delivery address.
+      </Property>
+      <Property name="receiver.delivery_address.postal_code" type="string" required>
+        Postal code of the delivery address.
+      </Property>
+      <Property name="receiver.delivery_address.country" type="string" required>
+        Country of the delivery address.
+      </Property>
+      <Property name="receiver.delivery_address.full_address" type="string" required>
+        Full formatted address of the delivery address, if the address is passed as a single string.
+      </Property>
+      <Property name="receiver.delivery_address.latitude" type="float">
+        Latitude coordinate of the delivery address. If empty the delivery address will be geocoded.
+      </Property>
+      <Property name="receiver.delivery_address.longitude" type="float">
+        Longitude coordinate of the delivery address. If empty the delivery address will be geocoded.
+      </Property>
+      <Property name="receiver.drop_off_instructions" type="string">
+        Special instructions for delivery at the receiver's location.
+      </Property>
+      <Property name="parcels" type="array" required>
+        Array of objects, each containing details about a parcel to be shipped.
+      </Property>
+      <Property name="parcels.reference" type="string">
+        Reference identifier for the parcel.
+      </Property>
+      <Property name="parcels.description" type="string">
+        Description of the parcel contents.
+      </Property>
+      <Property name="parcels.dimensions" type="object" required>
+        Object containing the dimensions of the parcel.
+      </Property>
+      <Property name="parcels.dimensions.length" type="float" required>
+        Length of the parcel in centimeters.
+      </Property>
+      <Property name="parcels.dimensions.width" type="float" required>
+        Width of the parcel in centimeters.
+      </Property>
+      <Property name="parcels.dimensions.height" type="float" required>
+        Height of the parcel in centimeters.
+      </Property>
+      <Property name="parcels.weight" type="float" required>
+        Weight of the parcel in kilograms.
+      </Property>
+      <Property name="shipment_title" type="string">
+        Title or identifier for the shipment. If left empty the title “Untitled shipment” will be appended.
+      </Property>
+      <Property name="shipment_type" type="string" required>
+        Type of shipment (outbound, inbound, transfer, or return).
+      </Property>
+      <Property name="carrier_service" type="string">
+        Carrier service to be used for the shipment. If left empty, the cheapest service is selected.
+      </Property>
+      <Property name="purchase_label" type="boolean" required>
+        Boolean indicating whether to purchase a shipping label. 
+        <ul>
+          <li><b>true</b> = Shipment will be purchased and shipment label will be returned in the response</li>
+          <li><b>false</b> = Shipment will not be purchased, but the shipment record will be created in a pending state</li>
+        </ul>
+      </Property>
+      <Property name="collection_date" type="string">
+        Date for collection of the shipment. Leave empty if purchase_label is false.
+      </Property>
+      <Property name="collection_time" type="string">
+        Time for collection of the shipment. Leave empty if purchase_label is false.
       </Property>
     </Properties>
 
