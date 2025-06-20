@@ -4,7 +4,7 @@ This "Get Rates" endpoint allows an admin or system user to retrieve the availab
 
 ---
 
-## Endpoint {{ tag: 'POST', label: 'https://api.evership.app/rates' }}
+## Get Rates {{ tag: 'POST', label: 'https://api.evership.app/rates' }}
 
 <Row>
   <Col>
@@ -213,3 +213,212 @@ This "Get Rates" endpoint allows an admin or system user to retrieve the availab
 </Row>
 
 --- 
+
+## Validate address {{ tag: 'POST', label: 'https://api.evership.app/rates' }}
+
+<Row>
+  <Col>
+    
+    Using the “Validate address” API you can validate an address without having to implement and pay for Google Maps address validation.
+    This API can consume the address passed and then will return the address found during the geo-coding process, the validation status and an partial match suggestion if applicable.
+    
+    ### Request Fields
+    <Properties>
+      <Property name="collection_address.line1" type="string" required>
+        Street line of the collection address
+      </Property>
+      <Property name="collection_address.line2" type="string">
+        Optional second line of address
+      </Property>
+      <Property name="collection_address.city" type="string" required>
+        City of the collection address
+      </Property>
+      <Property name="collection_address.postal_code" type="string" required>
+        Postal code of the collection address
+      </Property>
+      <Property name="collection_address.state" type="string" required>
+        Province/state of the collection address
+      </Property>
+      <Property name="collection_address.country" type="string" required>
+        ISO 3166-1 alpha-2 country code (e.g. ZA)
+      </Property>
+      <Property name="delivery_address.line1" type="string" required>
+        Street line of the delivery address
+      </Property>
+      <Property name="delivery_address.line2" type="string">
+        Optional second line of address
+      </Property>
+      <Property name="delivery_address.city" type="string" required>
+        City of the delivery address
+      </Property>
+      <Property name="delivery_address.postal_code" type="string" required>
+        Postal code of the delivery address
+      </Property>
+      <Property name="delivery_address.state" type="string" required>
+        Province/state of the delivery address
+      </Property>
+      <Property name="delivery_address.country" type="string" required>
+        ISO 3166-1 alpha-2 country code
+      </Property>
+      <Property name="parcels" type="array" required>
+        List of parcel objects
+      </Property>
+      <Property name="parcels[].quantity" type="integer" required>
+        Number of identical parcels of this size/weight
+      </Property>
+      <Property name="parcels[].weight" type="float" required>
+        Weight in kilograms
+      </Property>
+      <Property name="parcels[].length" type="float" required>
+        Length in cm
+      </Property>
+      <Property name="parcels[].width" type="float" required>
+        Width in cm
+      </Property>
+      <Property name="parcels[].height" type="float" required>
+        Height in cm
+      </Property>
+      <Property name="service_codes" type="array">
+        Optional list of preferred service codes
+      </Property>
+    </Properties>
+
+    <div className="my-24"></div>
+
+    ### Response Fields
+    <Properties>
+      <Property name="status">
+        Indicates success or failure (success, error)
+      </Property>
+      <Property name="timestamp">
+        Time the response was generated
+      </Property>
+      <Property name="collection_address">
+        Normalized version of the input collection address
+      </Property>
+      <Property name="delivery_address">
+        Normalized version of the input delivery address
+      </Property>
+      <Property name="rates">
+        Array of available shipping options
+      </Property>
+      <Property name="rates[].provider">
+        Carrier name (e.g. "The Courier Guy")
+      </Property>
+      <Property name="rates[].service">
+        Service name (e.g. "Express")
+      </Property>
+      <Property name="rates[].service_code">
+        Internal service code used by Evership
+      </Property>
+      <Property name="rates[].currency">
+        3-letter currency code (e.g. ZAR)
+      </Property>
+      <Property name="rates[].amount">
+        Shipping cost
+      </Property>
+      <Property name="rates[].estimated_delivery">
+        Estimated delivery date/time in ISO 8601 format
+      </Property>
+      <Property name="rates[].cutoff_time">
+        Latest time to book for same-day dispatch
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+    
+    ### Example Request
+    <CodeGroup title="Request" tag="POST" label="/rates">
+    ```json
+    {
+      "collection_address": {
+        "line1": "Unit 3",
+        "line2": "Black River Park",
+        "city": "Cape Town",
+        "postal_code": "7925",
+        "state": "Western Cape",
+        "country": "ZA"
+      },
+      "delivery_address": {
+        "line1": "14 Long Street",
+        "line2": "",
+        "city": "Cape Town",
+        "postal_code": "8001",
+        "state": "Western Cape",
+        "country": "ZA"
+      },
+      "parcels": [
+        {
+          "quantity": 1,
+          "weight": 1,
+          "height": 10,
+          "width": 10,
+          "length": 10
+        }
+      ],
+      "service_codes": ["Express-001"]
+    }
+    ```
+    </CodeGroup>
+
+    ### Successful Response
+    <CodeGroup title="Response" tag="200" label="Success">
+    ```json
+    {
+      "status": "success",
+      "timestamp": "2024-01-22T15:22:01.293Z",
+      "collection_address": {
+        "country": "ZA",
+        "state": "Western Cape",
+        "postal_code": "7925",
+        "city": "Cape Town",
+        "line1": "Unit 3",
+        "line2": "Black River Park",
+        "formatted": "Unit 3, Black River Park, Cape Town 7925, Western Cape, South Africa"
+      },
+      "delivery_address": {
+        "country": "ZA",
+        "state": "Western Cape",
+        "postal_code": "8001",
+        "city": "Cape Town",
+        "line1": "14 Long Street",
+        "line2": "",
+        "formatted": "14 Long Street, Cape Town 8001, Western Cape, South Africa"
+      },
+      "rates": [
+        {
+          "provider": "The Courier Guy",
+          "service": "Express",
+          "service_code": "Express-001",
+          "currency": "ZAR",
+          "amount": 89.99,
+          "estimated_delivery": "2024-01-23T17:00:00+02:00",
+          "cutoff_time": "2024-01-22T14:00:00+02:00"
+        },
+        {
+          "provider": "Aramex",
+          "service": "Overnight",
+          "service_code": "ONP",
+          "currency": "ZAR",
+          "amount": 129.50,
+          "estimated_delivery": "2024-01-23T12:00:00+02:00",
+          "cutoff_time": "2024-01-22T15:00:00+02:00"
+        }
+      ]
+    }
+    ```
+    </CodeGroup>
+
+    ### Unsuccessful Response
+    <CodeGroup title="Response" tag="400" label="Error">
+    ```json
+    {
+      "status": "error",
+      "message": "Missing or invalid postal_code in delivery_address"
+    }
+    ```
+    </CodeGroup>
+
+  </Col>
+</Row>
