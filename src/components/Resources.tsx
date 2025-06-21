@@ -10,10 +10,9 @@ import {
 
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
-import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
-import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
-import { UserIcon } from '@/components/icons/UserIcon'
-import { UsersIcon } from '@/components/icons/UsersIcon'
+import { CheckIcon } from '@/components/icons/CheckIcon'
+import { TagIcon } from '@/components/icons/TagIcon'
+import { MapPinIcon } from '@/components/icons/MapPinIcon'
 
 interface Resource {
   href: string
@@ -28,11 +27,11 @@ interface Resource {
 
 const resources: Array<Resource> = [
   {
-    href: '/conversations',
-    name: 'Conversations',
+    href: '/rates',
+    name: 'Rates',
     description:
-      'Learn about the conversation model and how to create, retrieve, update, delete, and list conversations.',
-    icon: ChatBubbleIcon,
+      'Learn about the rates api and how to validate addresses and fetch different carrier rates.',
+    icon: CheckIcon,
     pattern: {
       y: -6,
       squares: [
@@ -46,7 +45,7 @@ const resources: Array<Resource> = [
     name: 'Labels',
     description:
       'Learn about the label model and how to create, retrieve, update, delete, and list labels.',
-    icon: EnvelopeIcon,
+    icon: TagIcon,
     pattern: {
       y: 32,
       squares: [
@@ -60,7 +59,7 @@ const resources: Array<Resource> = [
     name: 'Tracking',
     description:
       'Learn about the tracking model and how to create, retrieve, update, delete, and list tracking records.',
-    icon: UsersIcon,
+    icon: MapPinIcon,
     pattern: {
       y: 22,
       squares: [[0, 1]],
