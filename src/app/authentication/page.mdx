@@ -2,16 +2,66 @@
 
 You'll need to authenticate your requests to access any of the endpoints in the Evership API. In this guide, we'll walk through how authentication works. Evership uses API key authentication as the standard and only method for securing your API requests. You’ll include your API key in the request headers to verify your identity and gain access.
 
-## API Key authentication
+## API key authentication
 
 Evership APIs require API key authentication to authorize requests. You must include your API key in the request headers to access any of our API endpoints.
 
 All API requests must be made over HTTPS, calls made over plain HTTP will fail. 
 
-```bash {{ title: 'Example request with API key auth' }}
+
+<CodeGroup title="Example request with API key auth" tag="GET" label="/v1/shipments">
+
+```bash {{ title: 'cURL' }}
 curl https://api.evership.app/v1/shipments \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
+
+```js
+fetch('https://api.evership.app/v1/shipments', {
+  method: 'GET',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+```bash {{ title: 'Python' }}
+import requests
+
+url = 'https://api.evership.app/v1/shipments'
+headers = {
+    'Authorization': 'Bearer YOUR_API_KEY'
+}
+
+response = requests.get(url, headers=headers)
+print(response.json())
+```
+
+```bash {{ title: 'PHP' }}
+<?php
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => 'https://api.evership.app/v1/shipments',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_HTTPHEADER => [
+    'Authorization: Bearer YOUR_API_KEY'
+  ]
+]);
+
+$response = curl_exec($curl);
+curl_close($curl);
+
+echo $response;
+?>
+```
+
+</CodeGroup>
+
+Please don't commit your Evership API key to GitHub!
 
 ## Where to get your API key  
 1. Log into your Evership Dashboard  
@@ -22,5 +72,5 @@ Use this key in your Authorization headers as shown above.
 If you're using a tool like Postman, include the API key as a Bearer Token in the Authorization tab.
 
 <Note>
-Always store your token securely. Do not publish it in public repositories. Please your key if you suspect it has been compromised.
+Store your key securely. Do not publish it in public repositories. Reset it if you suspect it has been compromised.
 </Note>

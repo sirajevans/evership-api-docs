@@ -6,30 +6,34 @@ export const metadata = {
 
 # Webhooks
 
-In this guide, we will look at how to register and consume webhooks to integrate your app with Protocol. With webhooks, your app can know when something happens in Protocol, such as someone sending a message or adding a contact. {{ className: 'lead' }}
+In this guide, we’ll walk through how to register and consume webhooks to receive real-time updates from Evership. Webhooks allow your system to react automatically whenever the status of a shipment changes — no polling required. {{ className:"lead" }}
 
 ## Registering webhooks
 
-To register a new webhook, you need to have a URL in your app that Protocol can call. You can configure a new webhook from the Protocol dashboard under [API settings](#). Give your webhook a name, pick the [events](#event-types) you want to listen for, and add your URL.
+To set up a webhook, you’ll need a publicly accessible URL that Evership can send `POST` requests to. You can configure your webhook endpoint from the Evership dashboard under Settings > Integrations.
 
-Now, whenever something of interest happens in your app, a webhook is fired off by Protocol. In the next section, we'll look at how to consume webhooks.
+Once configured, Evership will send a `JSON` payload to your endpoint whenever the status of any shipment on your account changes. This allows you to automate workflows, such as triggering customer notifications or syncing shipment statuses in your internal systems.
+
+Now, whenever something interesting happens in your app, a webhook is fired off by Evership. In the next section, we'll look at how to consume webhooks.
 
 ## Consuming webhooks
 
-When your app receives a webhook request from Protocol, check the `type` attribute to see what event caused it. The first part of the event type will tell you the payload type, e.g., a conversation, message, etc.
+When your system receives a webhook request from Evership, you can inspect the payload to determine what shipment event triggered it. The webhook body includes key information such as the shipment ID, the new status, and a timestamp.
 
 ```json {{ title: 'Example webhook payload' }}
 {
-  "id": "a056V7R7NmNRjl70",
-  "type": "conversation.updated",
-  "payload": {
-    "id": "WAz8eIbvDR60rouK"
-    // ...
-  }
+  "shipment_id": "EVER447171049",
+  "status": "delivered",
+  "status_slug": "delivered",
+  "status_code": 9,
+  "timestamp": "2025-04-27T14:10:08+02:00",
+  "location": "CPT",
+  "comments": "Signature obtained – your parcel has been delivered and signed for."
+  // ...
 }
 ```
 
-In the example above, a conversation was `updated`, and the payload type is a `conversation`.
+In the example above, the shipment with ID `shp_01HF5TC8X63C3MFX3D0WTTVRHN` was updated to the `delivered` status. You can use this data to update your internal system, trigger notifications, or track delivery performance.
 
 <div className="not-prose">
   <Button href="#event-types" variant="text" arrow="right">
