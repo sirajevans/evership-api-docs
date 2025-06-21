@@ -1,49 +1,14 @@
 # Shipments
 
-Shipments are the core records in Evership — they represent the packages being prepared for delivery, including the sender and recipient information, parcel dimensions, and selected shipping service. On this page, we'll explore the endpoints available for managing shipments programmatically. You can create, retrieve, update, purchase, cancel, and delete shipments through the API.
+Shipments are the core records in Evership — they represent the packages being prepared for delivery, including the sender and recipient information, parcel dimensions, and selected shipping service. On this page, we'll explore the endpoints available for managing shipments programmatically. You can create, retrieve, update, purchase, cancel, and delete shipments through the API. {{ className: 'lead' }}
 
 ## Introduction
 
 The shipment model stores all the details needed to fulfill and track a shipment. Each shipment must have a collection and delivery address, at least one parcel, and can optionally include metadata like order number or customer contact information. Shipments can be created in a pending state or immediately purchased if a rate is available.
 
-### Properties
-
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the shipment.
-  </Property>
-  <Property name="state" type="string">
-    Current state of the shipment (pending, purchased, cancelled).
-  </Property>
-  <Property name="created_at" type="timestamp">
-    Timestamp when the shipment was created.
-  </Property>
-  <Property name="collection_address" type="object">
-    Address from where the parcel will be collected.
-  </Property>
-  <Property name="delivery_address" type="object">
-    Address where the parcel will be delivered.
-  </Property>
-  <Property name="parcels" type="array">
-    List of parcels included in the shipment, including quantity, weight, and dimensions.
-  </Property>
-  <Property name="metadata" type="object">
-    Optional object containing order details like customer name, phone, email, or reference numbers.
-  </Property>
-  <Property name="label_url" type="string">
-    (If purchased) URL to download the shipment label.
-  </Property>
-  <Property name="tracking_number" type="string">
-    (If purchased) Carrier-provided tracking number.
-  </Property>
-  <Property name="rate_selected" type="object">
-    (If purchased) Details of the rate used to purchase the shipment, including provider, service, and price.
-  </Property>
-</Properties>
-
 ---
 
-## Create Shipment {{ tag: 'POST', label: 'api.evership.co.za/v1/shipments' }}
+## Create Shipment {{ tag: 'POST', label: 'api.evership.app/v1/shipments' }}
 
 <Row>
   <Col>
@@ -1539,7 +1504,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## Cancel Shipments {{ tag: 'POST', label: 'api.evership.co.za/v1/cancel-shipment/{shipment_id}' }}
+## Cancel Shipments {{ tag: 'POST', label: 'api.evership.app/v1/cancel-shipment/{shipment_id}' }}
 
 <Row>
   <Col>
@@ -1603,7 +1568,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
     <CodeGroup title="Request">
     ```bash
-    POST https://www.api.evership.co.za/v1/cancel-shipment/{shipment_id}
+    POST https://www.api.evership.app/v1/cancel-shipment/{shipment_id}
     ```
     </CodeGroup>
 
@@ -1692,7 +1657,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## Delete Shipments {{ tag: 'DELETE', label: 'api.evership.co.za/v1/shipments/{shipment_id}' }}
+## Delete Shipments {{ tag: 'DELETE', label: 'api.evership.app/v1/shipments/{shipment_id}' }}
 
 <Row>
   <Col>
@@ -1753,7 +1718,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
     <CodeGroup title="Request">
     ```bash
-    DELETE https://www.api.evership.co.za/v1/shipments?shipment_ids=12345,12346,12347
+    DELETE https://www.api.evership.app/v1/shipments?shipment_ids=12345,12346,12347
     ```
     </CodeGroup>
 

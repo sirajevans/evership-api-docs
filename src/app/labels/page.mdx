@@ -1,8 +1,8 @@
 # Labels
 
-Labels are a critical part of the shipping process — they contain the carrier, service, barcode, and address information required for successful delivery. Evership provides two endpoints for retrieving shipping labels: one for individual shipments, and one for batches.
+Labels are a critical part of the shipping process — they contain the carrier, service, barcode, and address information required for successful delivery. Evership provides two endpoints for retrieving shipping labels: one for individual shipments, and one for batches. {{ className: 'lead' }}
 
-On this page, we’ll explore how to retrieve shipping labels programmatically, either in single or batch format. Labels can be generated in multiple sizes, and downloaded as ready-to-print PDF files.
+On this page, we’ll explore how to retrieve shipping labels programmatically, either in single or batch format. Labels can be generated in multiple sizes, and downloaded as ready-to-print PDF files. {{ className: 'lead' }}
 
 
 ## Introduction
@@ -42,7 +42,7 @@ The Retrieve label (single) endpoint lets you download labels in multiple format
 
     <CodeGroup title="Request">
     ```bash
-    GET https://www.api.evership.co.za/v1/labels/single?shipment_id=12345&label_formats=10_10,10_15,a4_page
+    GET https://www.api.evership.app/v1/labels/single?shipment_id=12345&label_formats=10_10,10_15,a4_page
     ```
     </CodeGroup>
 
@@ -53,15 +53,15 @@ The Retrieve label (single) endpoint lets you download labels in multiple format
       "labels": [
         {
           "format": "10_10",
-          "url": "https://www.api.evership.co.za/v1/shipments/12345/label/10_10"
+          "url": "https://www.api.evership.app/v1/shipments/12345/label/10_10"
         },
         {
           "format": "10_15",
-          "url": "https://www.api.evership.co.za/v1/shipments/12345/label/10_15"
+          "url": "https://www.api.evership.app/v1/shipments/12345/label/10_15"
         },
         {
           "format": "a4_page",
-          "url": "https://www.api.evership.co.za/v1/shipments/12345/label/a4_page"
+          "url": "https://www.api.evership.app/v1/shipments/12345/label/a4_page"
         }
       ]
     }
@@ -108,7 +108,7 @@ The Retrieve label (single) endpoint lets you download labels in multiple format
 
     <CodeGroup title="Request">
     ```bash
-    GET https://www.api.evership.co.za/v1/labels/batch?shipment_ids=12345,12346,12347&label_format=10_15
+    GET https://www.api.evership.app/v1/labels/batch?shipment_ids=12345,12346,12347&label_format=10_15
     ```
     </CodeGroup>
 
@@ -117,7 +117,7 @@ The Retrieve label (single) endpoint lets you download labels in multiple format
     {
       "label_batch_id": "batch_qAAAAABlYF30BJk5Xv1J30ZF5x9Z1Q2F5x",
       "label_format": "10_15_label",
-      "label_url": "https://www.api.evership.co.za/v1/shipments/label/batch_qAAAAABlYF30BJk5Xv1J30ZF5x9Z1Q2F5x.pdf"
+      "label_url": "https://www.api.evership.app/v1/shipments/label/batch_qAAAAABlYF30BJk5Xv1J30ZF5x9Z1Q2F5x.pdf"
     }
     ```
     </CodeGroup>

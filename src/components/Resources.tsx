@@ -11,6 +11,7 @@ import {
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
 import { CheckIcon } from '@/components/icons/CheckIcon'
+import { PackageIcon } from '@/components/icons/PackageIcon'
 import { TagIcon } from '@/components/icons/TagIcon'
 import { MapPinIcon } from '@/components/icons/MapPinIcon'
 
@@ -36,6 +37,20 @@ const resources: Array<Resource> = [
       y: -6,
       squares: [
         [-1, 2],
+        [1, 3],
+      ],
+    },
+  },
+  {
+    href: '/shipments',
+    name: 'Shipments',
+    description:
+      'Learn about the shipment model and how to create, purchase, and manage shipments.',
+    icon: PackageIcon,
+    pattern: {
+      y: 16,
+      squares: [
+        [0, 1],
         [1, 3],
       ],
     },

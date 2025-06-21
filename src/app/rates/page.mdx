@@ -1,45 +1,14 @@
 # Rates
 
-Rates are at the heart of Evership’s delivery engine — they represent the available shipping options and pricing returned for a given shipment. The Rates API allows you to fetch real-time quotes from multiple courier partners by submitting a collection and delivery address, along with parcel dimensions and weight.
+Rates are at the heart of Evership’s delivery engine — they represent the available shipping options and pricing returned for a given shipment. The Rates API allows you to fetch real-time quotes from multiple courier partners by submitting a collection and delivery address, along with parcel dimensions and weight. {{ className: 'lead' }}
 
-On this page, we’ll explore how to use the Rates API to display delivery options during checkout or calculate fulfillment costs programmatically. You can retrieve all available services for a shipment, including pricing, estimated delivery times, and cutoff deadlines.
+On this page, we’ll explore how to use the Rates API to display delivery options during checkout or calculate fulfillment costs programmatically. You can retrieve all available services for a shipment, including pricing, estimated delivery times, and cutoff deadlines. {{ className: 'lead' }}
 
 ## Introduction
 
 The rate model contains all the information returned from Evership’s carrier integrations based on your request data. Each rate represents a single service offered by a courier, matched to your route and parcel specifications.
 The API can also normalize and validate addresses as part of the process to improve downstream reliability.
 
-### Properties
-
-<Properties>
-  <Property name="provider" type="string">
-    Name of the courier providing the service (e.g. "Fastway").
-  </Property>
-  <Property name="service" type="string">
-    Name of the shipping service (e.g. "Express").
-  </Property>
-  <Property name="service_code" type="string">
-    Internal service code used by Evership (e.g. "Express-001").
-  </Property>
-  <Property name="currency" type="string">
-    3-letter ISO currency code (e.g. "ZAR").
-  </Property>
-  <Property name="amount" type="float">
-    Total cost of the shipment using this rate.
-  </Property>
-  <Property name="estimated_delivery" type="timestamp">
-    ISO 8601 date/time estimate for when the shipment will arrive.
-  </Property>
-  <Property name="cutoff_time" type="timestamp">
-    ISO 8601 timestamp indicating the latest time this service can be booked for same-day dispatch.
-  </Property>
-  <Property name="collection_address" type="object">
-    Normalized version of the submitted pickup address.
-  </Property>
-  <Property name="delivery_address" type="object">
-    Normalized version of the submitted destination address.
-  </Property>
-</Properties>
 ---
 
 ## Validate address {{ tag: 'POST', label: 'api.evership.app/v1/validate-address' }}
@@ -213,7 +182,7 @@ The API can also normalize and validate addresses as part of the process to impr
 
 ---
 
-## Get Rates {{ tag: 'POST', label: 'api.evership.co.za/v1/rates' }}
+## Get Rates {{ tag: 'POST', label: 'api.evership.app/v1/rates' }}
 
 <Row>
   <Col>
