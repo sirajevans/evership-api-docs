@@ -1,10 +1,13 @@
 # Shipments
+
 Shipments are the core records in Evership — they represent the packages being prepared for delivery, including the sender and recipient information, parcel dimensions, and selected shipping service. On this page, we'll explore the endpoints available for managing shipments programmatically. You can create, retrieve, update, purchase, cancel, and delete shipments through the API.
 
-## The shipment model
+## Introduction
+
 The shipment model stores all the details needed to fulfill and track a shipment. Each shipment must have a collection and delivery address, at least one parcel, and can optionally include metadata like order number or customer contact information. Shipments can be created in a pending state or immediately purchased if a rate is available.
 
 ### Properties
+
 <Properties>
   <Property name="id" type="string">
     Unique identifier for the shipment.
@@ -40,7 +43,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## Create Shipment {{ tag: 'POST', label: 'https://www.api.evership.co.za/v1/shipments' }}
+## Create Shipment {{ tag: 'POST', label: 'api.evership.co.za/v1/shipments' }}
 
 <Row>
   <Col>
@@ -860,7 +863,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## Purchase Shipment {{ tag: 'POST', label: 'https://api.evership.app/v1/purchase-shipment' }}
+## Purchase Shipment {{ tag: 'POST', label: 'api.evership.app/v1/purchase-shipment' }}
 
 <Row>
   <Col>
@@ -971,7 +974,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## Edit Shipment {{ tag: 'PUT', label: 'https://api.evership.app/v1/shipments/{shipment_id}' }}
+## Edit Shipment {{ tag: 'PUT', label: 'api.evership.app/v1/shipments/{shipment_id}' }}
 
 <Row>
   <Col>
@@ -1174,7 +1177,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## List Shipments {{ tag: 'GET', label: 'https://api.evership.app/v1/list-shipments' }}
+## List Shipments {{ tag: 'GET', label: 'api.evership.app/v1/list-shipments' }}
 
 <Row>
   <Col>
@@ -1261,7 +1264,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/list-shipments">
+    <CodeGroup title="Request">
     ```bash
     GET https://api.example.com/list-shipments?page=1&results_per_page=25&status=pending&payment_status=paid&shipment_type=outbound&carrier=fw&collection_region=Western%20Cape&delivery_region=Eastern%20Cape&created_date_range_start=2025-02-01&created_date_range_end=2025-02-14&collection_date_range_start=2025-02-10&collection_date_range_end=2025-02-15&last_updated_range_start=2025-02-12&last_updated_range_end=2025-02-16&geo_coded_status=unmatched
     ```
@@ -1362,7 +1365,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## Retrieve Shipments {{ tag: 'GET', label: 'https://api.evership.app/shipments/{shipment_id}' }}
+## Retrieve Shipments {{ tag: 'GET', label: 'api.evership.app/shipments/{shipment_id}' }}
 
 <Row>
   <Col>
@@ -1430,7 +1433,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/list-shipments">
+    <CodeGroup title="Request">
     ```bash
     GET https://api.evership.app/shipments/{shipment_id}
     ```
@@ -1536,7 +1539,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## Cancel Shipments {{ tag: 'POST', label: 'https://www.api.evership.co.za/v1/cancel-shipment/{shipment_id}' }}
+## Cancel Shipments {{ tag: 'POST', label: 'api.evership.co.za/v1/cancel-shipment/{shipment_id}' }}
 
 <Row>
   <Col>
@@ -1598,7 +1601,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="POST" label="/v1/cancel-shipment/{shipment_id}">
+    <CodeGroup title="Request">
     ```bash
     POST https://www.api.evership.co.za/v1/cancel-shipment/{shipment_id}
     ```
@@ -1689,7 +1692,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
 
 ---
 
-## Delete Shipments {{ tag: 'DELETE', label: 'https://www.api.evership.co.za/v1/shipments?shipment_ids=12345,12346,12347' }}
+## Delete Shipments {{ tag: 'DELETE', label: 'api.evership.co.za/v1/shipments/{shipment_id}' }}
 
 <Row>
   <Col>
@@ -1748,7 +1751,7 @@ The shipment model stores all the details needed to fulfill and track a shipment
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/cancel-shipment/{shipment_id}">
+    <CodeGroup title="Request">
     ```bash
     DELETE https://www.api.evership.co.za/v1/shipments?shipment_ids=12345,12346,12347
     ```

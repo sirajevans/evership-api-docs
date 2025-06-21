@@ -1,441 +1,127 @@
-export const metadata = {
-  title: 'Messages',
-  description:
-    'On this page, we’ll dive into the different message endpoints you can use to manage messages programmatically.',
-}
+# Labels
 
-# Messages
+Labels are a critical part of the shipping process — they contain the carrier, service, barcode, and address information required for successful delivery. Evership provides two endpoints for retrieving shipping labels: one for individual shipments, and one for batches.
 
-Messages are what conversations are made of in Protocol — they are the basic building blocks of your conversations with your Protocol contacts. On this page, we'll dive into the different message endpoints you can use to manage messages programmatically. We'll look at how to query, send, update, and delete messages. {{ className: 'lead' }}
+On this page, we’ll explore how to retrieve shipping labels programmatically, either in single or batch format. Labels can be generated in multiple sizes, and downloaded as ready-to-print PDF files.
 
-## The message model
 
-The message model contains all the information about the messages and attachments you send to your contacts and groups, including how your contacts have reacted to them.
+## Introduction
 
-### Properties
+The label model defines the format, URL, and relationship to the shipment(s). Labels are only available once a shipment has been successfully purchased.
 
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the message.
-  </Property>
-  <Property name="conversation_id" type="string">
-    Unique identifier for the conversation the message belongs to.
-  </Property>
-  <Property name="contact" type="object">
-    The contact object for the contact who sent the message.
-  </Property>
-  <Property name="message" type="string">
-    The message content.
-  </Property>
-  <Property name="reactions" type="array">
-    An array of reaction objects associated with the message.
-  </Property>
-  <Property name="attachments" type="array">
-    An array of attachment objects associated with the message.
-  </Property>
-  <Property name="read_at" type="timestamp">
-    Timestamp of when the message was read.
-  </Property>
-  <Property name="created_at" type="timestamp">
-    Timestamp of when the message was created.
-  </Property>
-  <Property name="updated_at" type="timestamp">
-    Timestamp of when the message was last updated.
-  </Property>
-</Properties>
+The Retrieve label (single) endpoint lets you download labels in multiple formats for a single shipment, while the Retrieve label (batch) endpoint returns a single PDF file containing labels for multiple shipments in one consistent format.
 
 ---
 
-## List all messages {{ tag: 'GET', label: '/v1/messages' }}
+## Retrieve a label (single) {{ tag: 'GET', label: '/v1/labels/single' }}
 
 <Row>
   <Col>
-
-    This endpoint allows you to retrieve a paginated list of all your messages (in a conversation if a conversation id is provided). By default, a maximum of ten messages are shown per page.
+    Using the "Retrieve label (single)" API you can pass the shipment_id of a purchased shipment and define the label formats that you want to be returned.
+    The response will contain a URL to the shipment labels in each of the formats requested.
 
     ### Optional attributes
 
     <Properties>
-      <Property name="conversation_id" type="string">
-        Limit to messages from a given conversation.
+      <Property name="shipment_id" type="string" required>
+        Unique identifier for the shipment for which the label is being requested.
       </Property>
-      <Property name="limit" type="integer">
-        Limit the number of messages returned.
+      <Property name="label_formats" type="string" required>
+        Comma-separated list of label formats to be retrieved.<br/>
+        Possible formats include:
+        <ul>
+          <li><code>10_10</code> = 10 cm × 10 cm label</li>
+          <li><code>10_15</code> = 10 cm × 15 cm label</li>
+          <li><code>a4_page</code> = label printed on an A4 page, 2 labels per page</li>
+        </ul>
       </Property>
     </Properties>
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/messages">
-
-    ```bash {{ title: 'cURL' }}
-    curl -G https://api.protocol.chat/v1/messages \
-      -H "Authorization: Bearer {token}" \
-      -d conversation_id=xgQQXg3hrtjh7AvZ \
-      -d limit=10
+    <CodeGroup title="Request">
+    ```bash
+    GET https://www.api.evership.co.za/v1/labels/single?shipment_id=12345&label_formats=10_10,10_15,a4_page
     ```
-
-    ```js
-    import ApiClient from '@example/protocol-api'
-
-    const client = new ApiClient(token)
-
-    await client.messages.list()
-    ```
-
-    ```python
-    from protocol_api import ApiClient
-
-    client = ApiClient(token)
-
-    client.messages.list()
-    ```
-
-    ```php
-    $client = new \Protocol\ApiClient($token);
-
-    $client->messages->list();
-    ```
-
     </CodeGroup>
 
-    ```json {{ title: 'Response' }}
+    <CodeGroup title="Response" tag="200" label="Success">
+    ```json {{ title: 'Success' }}
     {
-      "has_more": false,
-      "data": [
+      "shipment_id": "12345",
+      "labels": [
         {
-          "id": "SIuAFUNKdSYHZF2w",
-          "conversation_id": "xgQQXg3hrtjh7AvZ",
-          "contact": {
-            "id": "WAz8eIbvDR60rouK",
-            "username": "KevinMcCallister",
-            "phone_number": "1-800-759-3000",
-            "avatar_url": "https://assets.protocol.chat/avatars/buzzboy.jpg",
-            "last_active_at": 705103200,
-            "created_at": 692233200
-          },
-          "message": "It’s a nice night for a neck injury.",
-          "reactions": [],
-          "attachments": [],
-          "read_at": 705103200,
-          "created_at": 692233200,
-          "updated_at": 692233200
+          "format": "10_10",
+          "url": "https://www.api.evership.co.za/v1/shipments/12345/label/10_10"
         },
         {
-          "id": "hSIhXBhNe8X1d8Et",
-          // ..
+          "format": "10_15",
+          "url": "https://www.api.evership.co.za/v1/shipments/12345/label/10_15"
+        },
+        {
+          "format": "a4_page",
+          "url": "https://www.api.evership.co.za/v1/shipments/12345/label/a4_page"
         }
       ]
     }
     ```
-
+    </CodeGroup>
   </Col>
 </Row>
 
 ---
 
-## Send a message {{ tag: 'POST', label: '/v1/messages' }}
+## Retrieve a label (batch) {{ tag: 'GET', label: '/v1/labels/batch' }}
 
 <Row>
   <Col>
+    Using this “Retrieve label (batch)” API you can pass multiple `shipment_id's` of a batch of purchased shipments and define the single label format that you want to be returned. 
 
-    This endpoint allows you to send a new message to one of your conversations.
+    The response will contain a URL to single PDF file that contains the shipment labels of all of the `shipment_id's` requested in the format requested.
 
-    ### Required attributes
+    **This is different from the [Retrieve label (single)](/labels#retrieve-a-label-single) API in 2 ways:**
 
-    <Properties>
-      <Property name="conversation_id" type="string">
-        Unique identifier for the conversation the message belongs to.
-      </Property>
-      <Property name="message" type="string">
-        The message content.
-      </Property>
-    </Properties>
+    1. You can pass multiple `shipment_id's` and we will return a single PDF file that contains all of the labels of the requested shipment records
+    2. You can only request for a single label format, not all three label formats.
 
     ### Optional attributes
 
+    ### Request Fields
+
     <Properties>
-      <Property name="attachments" type="array">
-        An array of attachment objects associated with the message.
+      <Property name="shipment_ids" type="array" required>
+        Array of unique identifiers for the shipments.
+      </Property>
+      <Property name="label_format" type="string" required>
+        The format of the label to be used for the shipments:<br/>
+        <ul>
+          <li><code>10_10</code> = 10 cm × 10 cm label</li>
+          <li><code>10_15</code> = 10 cm × 15 cm label</li>
+          <li><code>a4_page</code> = labels printed on an A4 page, 2 labels per page</li>
+        </ul>
       </Property>
     </Properties>
 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="POST" label="/v1/messages">
-
-    ```bash {{ title: 'cURL' }}
-    curl https://api.protocol.chat/v1/messages \
-      -H "Authorization: Bearer {token}" \
-      -d conversation_id="xgQQXg3hrtjh7AvZ" \
-      -d message="You’re what the French call ‘les incompetents.’"
+    <CodeGroup title="Request">
+    ```bash
+    GET https://www.api.evership.co.za/v1/labels/batch?shipment_ids=12345,12346,12347&label_format=10_15
     ```
-
-    ```js
-    import ApiClient from '@example/protocol-api'
-
-    const client = new ApiClient(token)
-
-    await client.messages.send({
-      conversation_id: 'xgQQXg3hrtjh7AvZ',
-      message: 'You’re what the French call ‘les incompetents.’',
-    })
-    ```
-
-    ```python
-    from protocol_api import ApiClient
-
-    client = ApiClient(token)
-
-    client.messages.send(
-      conversation_id="xgQQXg3hrtjh7AvZ",
-      message="You’re what the French call ‘les incompetents.’",
-    )
-    ```
-
-    ```php
-    $client = new \Protocol\ApiClient($token);
-
-    $client->messages->send([
-      'conversation_id' => 'xgQQXg3hrtjh7AvZ',
-      'message' => 'You’re what the French call ‘les incompetents.’',
-    ]);
-    ```
-
     </CodeGroup>
 
-    ```json {{ title: 'Response' }}
+    <CodeGroup title="Response" tag="200" label="Success">
+    ```json {{ title: 'Success' }}
     {
-      "id": "gWqY86BMFRiH5o11",
-      "conversation_id": "xgQQXg3hrtjh7AvZ",
-      "contact": {
-        "id": "inEIRvzjC6YLMX3o",
-        "username": "LinnieMcCallister",
-        "phone_number": "1-800-759-3000",
-        "avatar_url": "https://assets.protocol.chat/avatars/linnie.jpg",
-        "last_active_at": 705103200,
-        "created_at": 692233200
-      },
-      "message": "You’re what the French call ‘les incompetents.’",
-      "reactions": [],
-      "attachments": [],
-      "read_at": null,
-      "created_at": 692233200,
-      "updated_at": null
+      "label_batch_id": "batch_qAAAAABlYF30BJk5Xv1J30ZF5x9Z1Q2F5x",
+      "label_format": "10_15_label",
+      "label_url": "https://www.api.evership.co.za/v1/shipments/label/batch_qAAAAABlYF30BJk5Xv1J30ZF5x9Z1Q2F5x.pdf"
     }
     ```
-
+    </CodeGroup>
   </Col>
 </Row>
 
 ---
-
-## Retrieve a message {{ tag: 'GET', label: '/v1/messages/:id' }}
-
-<Row>
-  <Col>
-
-    This endpoint allows you to retrieve a message by providing the message id. Refer to [the list](#the-message-model) at the top of this page to see which properties are included with message objects.
-
-  </Col>
-  <Col sticky>
-
-    <CodeGroup title="Request" tag="GET" label="/v1/messages/SIuAFUNKdSYHZF2w">
-
-    ```bash {{ title: 'cURL' }}
-    curl https://api.protocol.chat/v1/messages/SIuAFUNKdSYHZF2w \
-      -H "Authorization: Bearer {token}"
-    ```
-
-    ```js
-    import ApiClient from '@example/protocol-api'
-
-    const client = new ApiClient(token)
-
-    await client.messages.get('SIuAFUNKdSYHZF2w')
-    ```
-
-    ```python
-    from protocol_api import ApiClient
-
-    client = ApiClient(token)
-
-    client.messages.get("SIuAFUNKdSYHZF2w")
-    ```
-
-    ```php
-    $client = new \Protocol\ApiClient($token);
-
-    $client->messages->get('SIuAFUNKdSYHZF2w');
-    ```
-
-    </CodeGroup>
-
-    ```json {{ title: 'Response' }}
-    {
-      "id": "SIuAFUNKdSYHZF2w",
-      "conversation_id": "xgQQXg3hrtjh7AvZ",
-      "contact": {
-        "id": "WAz8eIbvDR60rouK",
-        "username": "KevinMcCallister",
-        "phone_number": "1-800-759-3000",
-        "avatar_url": "https://assets.protocol.chat/avatars/kevin.jpg",
-        "last_active_at": 705103200,
-        "created_at": 692233200
-      },
-      "message": "I’m traveling with my dad. He’s at a meeting. I hate meetings.",
-      "reactions": [],
-      "attachments": [],
-      "read_at": 705103200,
-      "created_at": 692233200,
-      "updated_at": 692233200
-    }
-    ```
-
-  </Col>
-</Row>
-
----
-
-## Update a message {{ tag: 'PUT', label: '/v1/messages/:id' }}
-
-<Row>
-  <Col>
-
-    This endpoint allows you to perform an update on a message. Examples of updates are adding a reaction, editing the message, or adding an attachment.
-
-    ### Optional attributes
-
-    <Properties>
-      <Property name="message" type="string">
-        The message content.
-      </Property>
-      <Property name="reactions" type="array">
-        An array of reaction objects associated with the message.
-      </Property>
-      <Property name="attachments" type="array">
-        An array of attachment objects associated with the message.
-      </Property>
-    </Properties>
-
-  </Col>
-  <Col sticky>
-
-    <CodeGroup title="Request" tag="PUT" label="/v1/messages/SIuAFUNKdSYHZF2w">
-
-    ```bash {{ title: 'cURL' }}
-    curl -X PUT https://api.protocol.chat/v1/messages/SIuAFUNKdSYHZF2w \
-      -H "Authorization: Bearer {token}" \
-      -d reactions[red_angry_face][]="KateMcCallister"
-    ```
-
-    ```js
-    import ApiClient from '@example/protocol-api'
-
-    const client = new ApiClient(token)
-
-    await client.messages.update('SIuAFUNKdSYHZF2w', {
-        reactions: {
-            red_angry_face: ['KateMcCallister']
-        }
-    })
-    ```
-
-    ```python
-    from protocol_api import ApiClient
-
-    client = ApiClient(token)
-
-    client.messages.update("SIuAFUNKdSYHZF2w",
-        reactions={"red_angry_face": ["KateMcCallister"]})
-    ```
-
-    ```php
-    $client = new \Protocol\ApiClient($token);
-
-    $client->messages->update('SIuAFUNKdSYHZF2w', [
-      'reactions' => [
-        'red_angry_face' => ['KateMcCallister'],
-      ],
-    ]);
-    ```
-
-    </CodeGroup>
-
-    ```json {{ title: 'Response' }}
-    {
-      "id": "SIuAFUNKdSYHZF2w",
-      "conversation_id": "xgQQXg3hrtjh7AvZ",
-      "contact": {
-        "id": "WAz8eIbvDR60rouK",
-        "username": "KevinMcCallister",
-        "phone_number": "1-800-759-3000",
-        "avatar_url": "https://assets.protocol.chat/avatars/buzzboy.jpg",
-        "last_active_at": 705103200,
-        "created_at": 692233200
-      },
-      "message": "I'm not apologizing. I'd rather kiss a toilet seat.",
-      "reactions": [
-        {
-          "red_angry_face": [
-            "KateMcCallister"
-          ]
-        }
-      ],
-      "attachments": [],
-      "read_at": 705103200,
-      "created_at": 692233200,
-      "updated_at": 692233200
-    }
-    ```
-
-  </Col>
-</Row>
-
----
-
-## Delete a message {{ tag: 'DELETE', label: '/v1/messages/:id' }}
-
-<Row>
-  <Col>
-
-    This endpoint allows you to delete messages from your conversations. Note: This will permanently delete the message.
-
-  </Col>
-  <Col sticky>
-
-    <CodeGroup title="Request" tag="DELETE" label="/v1/messages/SIuAFUNKdSYHZF2w">
-
-    ```bash {{ title: 'cURL' }}
-    curl -X DELETE https://api.protocol.chat/v1/messages/SIuAFUNKdSYHZF2w \
-      -H "Authorization: Bearer {token}"
-    ```
-
-    ```js
-    import ApiClient from '@example/protocol-api'
-
-    const client = new ApiClient(token)
-
-    await client.messages.delete('SIuAFUNKdSYHZF2w')
-    ```
-
-    ```python
-    from protocol_api import ApiClient
-
-    client = ApiClient(token)
-
-    client.messages.delete("SIuAFUNKdSYHZF2w")
-    ```
-
-    ```php
-    $client = new \Protocol\ApiClient($token);
-
-    $client->messages->delete('SIuAFUNKdSYHZF2w');
-    ```
-
-    </CodeGroup>
-
-  </Col>
-</Row>

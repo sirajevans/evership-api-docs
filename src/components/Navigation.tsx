@@ -235,9 +235,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
-      { title: 'SDKs', href: '/sdks' },
       { title: 'Authentication', href: '/authentication' },
-      { title: 'Pagination', href: '/pagination' },
       { title: 'Errors', href: '/errors' },
       { title: 'Webhooks', href: '/webhooks' },
     ],
@@ -248,8 +246,7 @@ export const navigation: Array<NavGroup> = [
       { title: 'Rates', href: '/rates' },
       { title: 'Shipments', href: '/shipments' },
       { title: 'Labels', href: '/labels' },
-      { title: 'Groups', href: '/groups' },
-      { title: 'Attachments', href: '/attachments' },
+      { title: 'Tracking', href: '/tracking' },
     ],
   },
 ]

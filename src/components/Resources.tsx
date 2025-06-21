@@ -28,20 +28,6 @@ interface Resource {
 
 const resources: Array<Resource> = [
   {
-    href: '/contacts',
-    name: 'Contacts',
-    description:
-      'Learn about the contact model and how to create, retrieve, update, delete, and list contacts.',
-    icon: UserIcon,
-    pattern: {
-      y: 16,
-      squares: [
-        [0, 1],
-        [1, 3],
-      ],
-    },
-  },
-  {
     href: '/conversations',
     name: 'Conversations',
     description:
@@ -70,10 +56,10 @@ const resources: Array<Resource> = [
     },
   },
   {
-    href: '/groups',
-    name: 'Groups',
+    href: '/tracking',
+    name: 'Tracking',
     description:
-      'Learn about the group model and how to create, retrieve, update, delete, and list groups.',
+      'Learn about the tracking model and how to create, retrieve, update, delete, and list tracking records.',
     icon: UsersIcon,
     pattern: {
       y: 22,

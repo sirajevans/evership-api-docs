@@ -1,0 +1,422 @@
+# Tracking
+
+Groups are where communities live in Protocol — they are a collection of contacts you're talking to all at once. On this page, we'll dive into the different group endpoints you can use to manage groups programmatically. We'll look at how to query, create, update, and delete groups. {{ className: 'lead' }}
+
+## Introduction
+
+The group model contains all the information about your groups, including what contacts are in the group and the group's name, description, and avatar.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    Unique identifier for the group.
+  </Property>
+  <Property name="name" type="string">
+    The name for the group.
+  </Property>
+  <Property name="description" type="string">
+    The description for the group.
+  </Property>
+  <Property name="avatar_url" type="string">
+    The avatar image URL for the group.
+  </Property>
+  <Property name="conversation_id" type="string">
+    Unique identifier for the conversation that belongs to the group.
+  </Property>
+  <Property name="contacts" type="array">
+    An array of contact objects that are members of the group.
+  </Property>
+  <Property name="created_at" type="timestamp">
+    Timestamp of when the group was created.
+  </Property>
+  <Property name="archived_at" type="timestamp">
+    Timestamp of when the group was archived.
+  </Property>
+</Properties>
+
+---
+
+## Shipment tracking log {{ tag: 'GET', label: 'api.evership.app/v1/tracking-log' }}
+
+<Row>
+  <Col>
+
+    This API will allow you to fetch the entire tracking log of a shipment by passing the `shipment_id` or the `waybill_number`
+    In the response we will return the entire tracking log for the shipment along with some additional information about the shipment.
+
+    ### Request fields
+
+    <Properties>
+      <Property name="shipment_id" type="string">
+        Unique ID for the shipment record that has been created.
+      </Property>
+      <Property name="waybill_number" type="string">
+        Waybill number for the shipment record. This is only available if the shipment has been purchased.
+      </Property>
+    </Properties>
+
+    <div className="my-18"></div>
+
+    ### Response fields
+
+     <Properties>
+      <Property name="shipment_id" type="string">
+        Unique identifier for the shipment.
+      </Property>
+      <Property name="shipment_title" type="string">
+        Title or identifier for the shipment.
+      </Property>
+      <Property name="waybill_number" type="string">
+        Waybill number associated with the shipment.
+      </Property>
+      <Property name="latest_status" type="object">
+        Object containing the latest status of the shipment.
+      </Property>
+      <Property name="latest_status.status" type="string">
+        Current status of the shipment (e.g. Delivered).
+      </Property>
+      <Property name="latest_status.slug" type="string">
+        Slug identifier for the current status.
+      </Property>
+      <Property name="latest_status.code" type="integer">
+        Code representing the current status.
+      </Property>
+      <Property name="created_time" type="timestamp">
+        Timestamp of when the shipment was created.
+      </Property>
+      <Property name="last_updated_time" type="timestamp">
+        Timestamp of the last update to the shipment.
+      </Property>
+      <Property name="est_delivery" type="timestamp">
+        Estimated delivery date and time.
+      </Property>
+      <Property name="est_delivery_text" type="string">
+        Formatted string describing the estimated delivery date and time.
+      </Property>
+      <Property name="tracking_log" type="array">
+        Array of objects containing tracking log entries for the shipment.
+      </Property>
+      <Property name="tracking_log[].timestamp" type="timestamp">
+        Timestamp of the tracking log entry.
+      </Property>
+      <Property name="tracking_log[].primary_status" type="object">
+        Object containing the primary status of the tracking log entry.
+      </Property>
+      <Property name="tracking_log[].primary_status.status" type="string">
+        Primary status of the shipment at the time of the log entry.
+      </Property>
+      <Property name="tracking_log[].primary_status.slug" type="string">
+        Slug identifier for the primary status.
+      </Property>
+      <Property name="tracking_log[].primary_status.code" type="integer">
+        Code representing the primary status.
+      </Property>
+      <Property name="tracking_log[].secondary_status" type="object">
+        Object containing the secondary status of the tracking log entry (if applicable).
+      </Property>
+      <Property name="tracking_log[].secondary_status.status" type="string">
+        Secondary status of the shipment at the time of the log entry.
+      </Property>
+      <Property name="tracking_log[].secondary_status.slug" type="string">
+        Slug identifier for the secondary status.
+      </Property>
+      <Property name="tracking_log[].secondary_status.code" type="integer">
+        Code representing the secondary status.
+      </Property>
+      <Property name="tracking_log[].comments" type="string">
+        Comments or additional information related to the tracking log entry.
+      </Property>
+      <Property name="tracking_log[].location" type="string">
+        Location associated with the tracking log entry.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request">
+
+    ```bash
+    GET https://api.evership.app/v1/tracking-log?shipment_id={shipment_id}&waybill_number={waybill_number}
+    ```
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "shipment_id": "82671",
+      "shipment_title": "ABC-123",
+      "waybill_number": "CTR791826652",
+      "latest_status": {
+        "status": "Delivered",
+        "slug": "delivered",
+        "code": 9
+      },
+      "created_time": "2025-04-06 22:48:00",
+      "last_updated_time": "2025-04-07 14:10:00",
+      "est_delivery": "2025-04-12 17:30:00",
+      "est_delivery_text": "Monday, 12th April by 5:30 PM",
+      "tracking_log": [
+        {
+          "timestamp": "2025-04-06 22:48:00",
+          "primary_status": {
+            "status": "Pending",
+            "slug": "pending",
+            "code": 1
+          },
+          "comments": "Created by admin admin",
+          "location": ""
+        },
+        {
+          "timestamp": "2025-04-06 22:51:00",
+          "primary_status": {
+            "status": "Collection requested",
+            "slug": "collection_requested",
+            "code": 2
+          },
+          "comments": "For collection on Mon, 07 Apr",
+          "location": ""
+        },
+        {
+          "timestamp": "2025-04-06 22:51:00",
+          "primary_status": {
+            "status": "Collection approved",
+            "slug": "collection_approved",
+            "code": 3
+          },
+          "comments": "Carrier collecting on Mon, 07 Apr",
+          "location": ""
+        },
+        {
+          "timestamp": "2025-04-07 10:37:00",
+          "primary_status": {
+            "status": "Collected",
+            "slug": "collected",
+            "code": 5
+          },
+          "comments": "Your parcel was picked up.",
+          "location": "CPT"
+        },
+        {
+          "timestamp": "2025-04-07 12:37:00",
+          "primary_status": {
+            "status": "In transit",
+            "slug": "in_transit",
+            "code": 7
+          },
+          "secondary_status": {
+            "status": "Processed at hub",
+            "slug": "hub_processed",
+            "code": "7A"
+          },
+          "comments": "The parcel has been left in the South Bay and will be delivered on the next scheduled delivery.",
+          "location": "CPT"
+        },
+        {
+          "timestamp": "2025-04-07 12:47:00",
+          "primary_status": {
+            "status": "In transit",
+            "slug": "in_transit",
+            "code": 7
+          },
+          "comments": "Your parcel is currently in transit from our Depot to the courier for delivery.",
+          "location": "CPT"
+        },
+        {
+          "timestamp": "2025-04-07 14:03:00",
+          "primary_status": {
+            "status": "Out for delivery",
+            "slug": "out_for_delivery",
+            "code": 8
+          },
+          "secondary_status": {
+            "status": "Arrived to deliver",
+            "slug": "arrived_deliver",
+            "code": "8A"
+          },
+          "comments": "Onboard - the parcel is onboard the Courier vehicle.",
+          "location": "CPT"
+        },
+        {
+          "timestamp": "2025-04-07 14:10:00",
+          "primary_status": {
+            "status": "Delivered",
+            "slug": "delivered",
+            "code": 9
+          },
+          "comments": "Signature Obtained - Your parcel has been delivered and signed for.",
+          "location": "CPT"
+        }
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Shipment tracking status {{ tag: 'GET', label: 'api.evership.app/v1/tracking-status' }}
+
+<Row>
+  <Col>
+
+    This endpoint allows you to create a new group conversation between you and a group of your Protocol contacts.
+
+    ### Request fields
+
+    <Properties>
+      <Property name="shipment_id" type="string">
+        Unique ID for the shipment record that has been created.
+      </Property>
+    </Properties>
+
+    <div className="my-18"></div>
+
+    ### Response fields
+
+    <Properties>
+      <Property name="shipment_id" type="string">
+        Unique identifier for the shipment.
+      </Property>
+      <Property name="shipment_title" type="string">
+        Title or identifier for the shipment.
+      </Property>
+      <Property name="waybill_number" type="string">
+        Waybill number associated with the shipment.
+      </Property>
+      <Property name="timestamp" type="string">
+        Timestamp of a specific event or action related to the shipment.
+      </Property>
+      <Property name="comments" type="string">
+        Comments or additional information related to the shipment event.
+      </Property>
+      <Property name="location" type="string">
+        Location associated with the shipment event (if applicable).
+      </Property>
+      <Property name="latest_status" type="object">
+        Object containing the latest status of the shipment.
+      </Property>
+      <Property name="latest_status.primary_status" type="object">
+        Object containing the primary status of the shipment.
+      </Property>
+      <Property name="latest_status.primary_status.status" type="string">
+        Current primary status of the shipment (e.g., Delivered, In transit).
+      </Property>
+      <Property name="latest_status.primary_status.slug" type="string">
+        Slug identifier for the primary status.
+      </Property>
+      <Property name="latest_status.primary_status.code" type="string">
+        Code representing the primary status.
+      </Property>
+      <Property name="latest_status.secondary_status" type="object">
+        Object containing the secondary status of the shipment (if applicable).
+      </Property>
+      <Property name="latest_status.secondary_status.status" type="string">
+        Secondary status of the shipment (e.g., Processed at hub).
+      </Property>
+      <Property name="latest_status.secondary_status.slug" type="string">
+        Slug identifier for the secondary status.
+      </Property>
+      <Property name="latest_status.secondary_status.code" type="string">
+        Code representing the secondary status.
+      </Property>
+      <Property name="created_time" type="string">
+        Timestamp of when the shipment was created.
+      </Property>
+      <Property name="last_updated_time" type="string">
+        Timestamp of the last update to the shipment.
+      </Property>
+      <Property name="est_delivery" type="string">
+        Estimated delivery date and time.
+      </Property>
+      <Property name="est_delivery_text" type="string">
+        Formatted string describing the estimated delivery date and time.
+      </Property>
+      <Property name="error" type="object">
+        Object containing error details for shipments that encountered issues.
+      </Property>
+      <Property name="error.message" type="string">
+        Message describing the error encountered for the shipment.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request">
+
+    ```bash
+    GET https://api.evership.app/v1/tracking-status?shipment_ids={shipment_id_1},{shipment_id_2}
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "shipment_id": "43342",
+      "shipment_title": "XYZ-789",
+      "waybill_number": "CP7123456090",
+      "timestamp": "2025-04-26 10:00:00",
+      "comments": "Created by Admin Admin",
+      "location": "",
+      "latest_status": {
+        "primary_status": {
+          "status": "In transit",
+          "slug": "in_transit",
+          "code": 7
+        },
+        "secondary_status": {
+          "status": "Processed at hub",
+          "slug": "hub_processed",
+          "code": 4
+        }
+      },
+      "created_time": "2025-04-26 10:00:00",
+      "last_updated_time": "2025-04-27 12:00:00",
+      "est_delivery": "2025-04-13 13:00:00",
+      "est_delivery_text": "Tuesday, 13th April by 3:00 PM"
+    },
+    {
+      "shipment_id": "60509",
+      "shipment_title": "ABC-123",
+      "waybill_number": "CP1234567890",
+      "timestamp": "2025-04-26 11:00:00",
+      "comments": "Created by John Doe",
+      "location": "Warehouse K",
+      "latest_status": {
+        "primary_status": {
+          "status": "Out for delivery",
+          "slug": "out_for_delivery",
+          "code": 8
+        }
+      },
+      "created_time": "2025-04-26 11:00:00",
+      "last_updated_time": "2025-04-26 08:00:00",
+      "est_delivery": "2025-04-13 16:00:00",
+      "est_delivery_text": "Wednesday, 9th April by 6:00 PM"
+    },
+    {
+      "shipment_id": "62271",
+      "shipment_title": "LMN-654",
+      "waybill_number": "CP1421234564",
+      "timestamp": "2025-04-26 10:00:00",
+      "comments": "Created by admin Jane Smith",
+      "location": "Distribution Center B",
+      "latest_status": {
+        "primary_status": {
+          "status": "Delivered",
+          "slug": "delivered",
+          "code": 9
+        }
+      },
+      "created_time": "2025-04-27 09:30:00",
+      "last_updated_time": "2025-04-26 10:00:00",
+      "est_delivery": "2025-04-01 14:00:00",
+      "est_delivery_text": "Delivered on Tuesday, 01st April at 2:00 PM"
+    }
+
+    ```
+
+  </Col>
+</Row>

@@ -4,7 +4,7 @@ Rates are at the heart of Evership’s delivery engine — they represent the av
 
 On this page, we’ll explore how to use the Rates API to display delivery options during checkout or calculate fulfillment costs programmatically. You can retrieve all available services for a shipment, including pricing, estimated delivery times, and cutoff deadlines.
 
-## The rates model
+## Introduction
 
 The rate model contains all the information returned from Evership’s carrier integrations based on your request data. Each rate represents a single service offered by a courier, matched to your route and parcel specifications.
 The API can also normalize and validate addresses as part of the process to improve downstream reliability.
@@ -42,7 +42,7 @@ The API can also normalize and validate addresses as part of the process to impr
 </Properties>
 ---
 
-## Validate address {{ tag: 'POST', label: 'https://api.evership.app/v1/validate-address' }}
+## Validate address {{ tag: 'POST', label: 'api.evership.app/v1/validate-address' }}
 
 <Row>
   <Col>
@@ -156,63 +156,50 @@ The API can also normalize and validate addresses as part of the process to impr
   </Col>
   <Col sticky>
     
-    ### Example Request
-    <CodeGroup title="Request" tag="GET" label="/validate-address">
-    ```
-    GET https://api.evership.app/v1/validate-address?address1=Unit%2012&address2=113%20Loop%20St&suburb=Cape%20Town&province=Western%20Cape&postal_code=8000&country=South%20Africa
-    ```
-    </CodeGroup>
-
-    ### Successful Response
-    <CodeGroup title="Response" tag="200" label="Success">
+    <CodeGroup title="Request" tag="POST" label="/v1/validate-address">
     ```json
     {
-      "status": "success",
-      "timestamp": "2024-01-22T15:22:01.293Z",
-      "collection_address": {
-        "country": "ZA",
-        "state": "Western Cape",
-        "postal_code": "7925",
-        "city": "Cape Town",
-        "line1": "Unit 3",
-        "line2": "Black River Park",
-        "formatted": "Unit 3, Black River Park, Cape Town 7925, Western Cape, South Africa"
-      },
-      "delivery_address": {
-        "country": "ZA",
-        "state": "Western Cape",
-        "postal_code": "8001",
-        "city": "Cape Town",
-        "line1": "14 Long Street",
-        "line2": "",
-        "formatted": "14 Long Street, Cape Town 8001, Western Cape, South Africa"
-      },
-      "rates": [
-        {
-          "provider": "The Courier Guy",
-          "service": "Express",
-          "service_code": "Express-001",
-          "currency": "ZAR",
-          "amount": 89.99,
-          "estimated_delivery": "2024-01-23T17:00:00+02:00",
-          "cutoff_time": "2024-01-22T14:00:00+02:00"
-        },
-        {
-          "provider": "Aramex",
-          "service": "Overnight",
-          "service_code": "ONP",
-          "currency": "ZAR",
-          "amount": 129.50,
-          "estimated_delivery": "2024-01-23T12:00:00+02:00",
-          "cutoff_time": "2024-01-22T15:00:00+02:00"
-        }
-      ]
+      "address_1": "101 Florida Road",
+      "address_2": "Apartment 4B",
+      "suburb": "Morningside",
+      "city": "Durban",
+      "province": "KwaZulu-Natal",
+      "postal_code": "4001",
+      "country": "South Africa"
     }
     ```
     </CodeGroup>
 
-    ### Unsuccessful Response
-    <CodeGroup title="Response" tag="400" label="Error">
+    <CodeGroup title="Response" tag="200" label="Success">
+    ```json
+    {
+      "status": "success",
+      "validation_status": "fully_matched",
+      "partial_match": false,
+      "matched_address": [
+        {
+          "formatted_address": "4b, 101 Florida Rd, Morningside, Durban, 4001, South Africa",
+          "address_components": {
+            "address_1": "101 Florida Road",
+            "address_2": "4b",
+            "suburb": "Morningside",
+            "city": "Durban",
+            "province": "KwaZulu-Natal",
+            "postal_code": "4001",
+            "country": "South Africa"
+          },
+          "coordinates": {
+            "latitude": -29.8352193,
+            "longitude": 31.0179579
+          }
+        }
+      ],
+      "partial_match_suggestions": []
+    }
+    ```
+    </CodeGroup>
+
+    <CodeGroup title="Error Response" tag="400" label="Error">
     ```json
     {
       "status": "error",
@@ -226,7 +213,7 @@ The API can also normalize and validate addresses as part of the process to impr
 
 ---
 
-## Get Rates {{ tag: 'POST', label: 'https://www.api.evership.co.za/v1/rates' }}
+## Get Rates {{ tag: 'POST', label: 'api.evership.co.za/v1/rates' }}
 
 <Row>
   <Col>
@@ -339,7 +326,6 @@ The API can also normalize and validate addresses as part of the process to impr
   </Col>
   <Col sticky>
     
-    ### Example Request
     <CodeGroup title="Request" tag="POST" label="/rates">
     ```json
     {
@@ -373,7 +359,6 @@ The API can also normalize and validate addresses as part of the process to impr
     ```
     </CodeGroup>
 
-    ### Successful Response
     <CodeGroup title="Response" tag="200" label="Success">
     ```json
     {
@@ -421,8 +406,7 @@ The API can also normalize and validate addresses as part of the process to impr
     ```
     </CodeGroup>
 
-    ### Unsuccessful Response
-    <CodeGroup title="Response" tag="400" label="Error">
+    <CodeGroup title="Error Response" tag="400" label="Error">
     ```json
     {
       "status": "error",

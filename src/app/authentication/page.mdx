@@ -1,41 +1,24 @@
-export const metadata = {
-  title: 'Authentication',
-  description:
-    'In this guide, we’ll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token.',
-}
-
 # Authentication
 
-You'll need to authenticate your requests to access any of the endpoints in the Protocol API. In this guide, we'll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token — OAuth2 is the recommended way. {{ className: 'lead' }}
+You'll need to authenticate your requests to access any of the endpoints in the Evership API. In this guide, we'll walk through how authentication works. Evership uses API key authentication as the standard and only method for securing your API requests. You’ll include your API key in the request headers to verify your identity and gain access.
 
-## Basic authentication
+## API Key authentication
 
-With basic authentication, you use your username and password to authenticate your HTTP requests. Unless you have a very good reason, you probably shouldn't use basic auth. Here's how to authenticate using cURL:
+Evership APIs require API key authentication to authorize requests. You must include your API key in the request headers to access any of our API endpoints.
 
-```bash {{ title: 'Example request with basic auth' }}
-curl https://api.protocol.chat/v1/conversations \
-  -u username:password
+```bash {{ title: 'Example request with API key auth' }}
+curl https://api.evership.app/v1/shipments \
+  -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
-Please don't commit your Protocol password to GitHub!
+## Where to get your API key  
+1. Log into your Evership Dashboard  
+2. Navigate to Settings > Integrations  
+3. Click Generate API Key
 
-## OAuth2 with bearer token
+Use this key in your Authorization headers as shown above.
+If you're using a tool like Postman, include the API key as a Bearer Token in the Authorization tab.
 
-The recommended way to authenticate with the Protocol API is by using OAuth2. When establishing a connection using OAuth2, you will need your access token — you will find it in the [Protocol dashboard](#) under API settings. Here's how to add the token to the request header using cURL:
-
-```bash {{ title: 'Example request with bearer token' }}
-curl https://api.protocol.chat/v1/conversations \
-  -H "Authorization: Bearer {token}"
-```
-
+<Note>
 Always keep your token safe and reset it if you suspect it has been compromised.
-
-## Using an SDK
-
-If you use one of our official SDKs, you won't have to worry about any of the above — fetch your access token from the [Protocol dashboard](#) under API settings, and the client library will take care of the rest. All the client libraries use OAuth2 behind the scenes.
-
-<div className="not-prose">
-  <Button href="/sdks" variant="text" arrow="right">
-    <>Check out our list of first-party SDKs</>
-  </Button>
-</div>
+</Note>
