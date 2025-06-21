@@ -7,80 +7,302 @@ This guide will get you all set up and ready to use the Evership API. We'll cove
   API key from your Evership dashboard via [Integrations](https://evership.app).
 </Note>
 
-## Choose your client
+## Making your first API request
 
-Before making your first API request, you need to pick which API client you will use. In addition to good ol' cURL HTTP requests, Evership offers clients for JavaScript, Python, and PHP. In the following example, you can see how to install each client.
+Once your API key is ready, we'll test it by creating a draft shipment — this will confirm that your integration is working and allow you to test sending parcel and address data without purchasing a label, as the `purchase_label` field is set to `false`.
 
 <CodeGroup>
 
 ```bash {{ title: 'cURL' }}
-# cURL is most likely already installed on your machine
-curl --version
-```
-
-```bash {{ language: 'js' }}
-# Install the Protocol JavaScript SDK
-npm install @example/protocol-api --save
-```
-
-```bash {{ language: 'python' }}
-# Install the Protocol Python SDK
-pip install protocol_api
-```
-
-```bash {{ language: 'php' }}
-# Install the Protocol PHP SDK
-composer require protocol/sdk
-```
-
-</CodeGroup>
-
-## Making your first API request
-
-After picking your preferred client, you are ready to make your first call to the Evership API. Below, you can see how to send a GET request to the Shipments endpoint to get a list of all your available shipments. In the cURL example, results are limited to ten shipments.
-
-<CodeGroup tag="GET" label="/v1/conversations">
-
-```bash {{ title: 'cURL' }}
-curl -G https://api.protocol.chat/v1/conversations \
-  -H "Authorization: Bearer {token}" \
-  -d limit=10
+curl --request POST \
+  --url https://api.evership.app/v1/shipments \
+  --header "Authorization: Bearer YOUR_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "sender": {
+      "name": "Michael Scott",
+      "contact": "0712345678",
+      "email": "michael@dundermifflin.com",
+      "collection_address": {
+        "address1": "Unit 22",
+        "address2": "26 Washington Rd",
+        "suburb": "Claremont",
+        "city": "Cape Town",
+        "province": "Western Cape",
+        "postal_code": "7780",
+        "country": "South Africa",
+        "full_address": "Unit 22, 26 Washington Rd, Claremont, Cape Town, 7780, South Africa",
+        "latitude": -33.9706,
+        "longitude": 18.4649
+      },
+      "pickup_instructions": "Call when arrived"
+    },
+    "receiver": {
+      "name": "Dwight Schrute",
+      "contact": "0712345678",
+      "email": "dwight@dundermifflin.com",
+      "delivery_address": {
+        "address1": "Tech Solutions Inc., Tech Park, Suite 500",
+        "address2": "12 Clyde Road",
+        "suburb": "Green Point",
+        "city": "Cape Town",
+        "province": "Western Cape",
+        "postal_code": "8005",
+        "country": "South Africa",
+        "full_address": "Tech Solutions Inc., Tech Park, Suite 500, 12 Clyde Road, Green Point, Cape Town, 8005, South Africa",
+        "latitude": -33.9095,
+        "longitude": 18.4155
+      },
+      "drop_off_instructions": "Please ring the bell twice"
+    },
+    "parcels": [
+      {
+        "reference": "Parcel-REF-1",
+        "description": "Books",
+        "dimensions": {
+          "length": 30,
+          "width": 20,
+          "height": 10
+        },
+        "weight": 5
+      }
+    ],
+    "shipment_title": "Order #1234",
+    "shipment_type": "outbound",
+    "carrier_service": "dpd-econ",
+    "purchase_label": false,
+    "collection_date": "2025-02-14",
+    "collection_time": "12:30:00"
+  }'
 ```
 
 ```js
-import ApiClient from '@example/protocol-api'
-
-const client = new ApiClient(token)
-
-await client.conversations.list()
+fetch('https://api.evership.app/v1/shipments', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    sender: {
+      name: "Michael Scott",
+      contact: "0712345678",
+      email: "michael@dundermifflin.com",
+      collection_address: {
+        address1: "Unit 22",
+        address2: "26 Washington Rd",
+        suburb: "Claremont",
+        city: "Cape Town",
+        province: "Western Cape",
+        postal_code: "7780",
+        country: "South Africa",
+        full_address: "Unit 22, 26 Washington Rd, Claremont, Cape Town, 7780, South Africa",
+        latitude: -33.9706,
+        longitude: 18.4649
+      },
+      pickup_instructions: "Call when arrived"
+    },
+    receiver: {
+      name: "Dwight Schrute",
+      contact: "0712345678",
+      email: "dwight@dundermifflin.com",
+      delivery_address: {
+        address1: "Tech Solutions Inc., Tech Park, Suite 500",
+        address2: "12 Clyde Road",
+        suburb: "Green Point",
+        city: "Cape Town",
+        province: "Western Cape",
+        postal_code: "8005",
+        country: "South Africa",
+        full_address: "Tech Solutions Inc., Tech Park, Suite 500, 12 Clyde Road, Green Point, Cape Town, 8005, South Africa",
+        latitude: -33.9095,
+        longitude: 18.4155
+      },
+      drop_off_instructions: "Please ring the bell twice"
+    },
+    parcels: [
+      {
+        reference: "Parcel-REF-1",
+        description: "Books",
+        dimensions: {
+          length: 30,
+          width: 20,
+          height: 10
+        },
+        weight: 5
+      }
+    ],
+    shipment_title: "Order #1234",
+    shipment_type: "outbound",
+    carrier_service: "dpd-econ",
+    purchase_label: false,
+    collection_date: "2025-02-14",
+    collection_time: "12:30:00"
+  })
+})
+.then(res => res.json())
+.then(data => console.log(data))
+.catch(err => console.error(err));
 ```
 
 ```python
-from protocol_api import ApiClient
+import requests
 
-client = ApiClient(token)
+url = "https://api.evership.app/v1/shipments"
+headers = {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+}
+payload = {
+    "sender": {
+        "name": "Michael Scott",
+        "contact": "0712345678",
+        "email": "michael@dundermifflin.com",
+        "collection_address": {
+            "address1": "Unit 22",
+            "address2": "26 Washington Rd",
+            "suburb": "Claremont",
+            "city": "Cape Town",
+            "province": "Western Cape",
+            "postal_code": "7780",
+            "country": "South Africa",
+            "full_address": "Unit 22, 26 Washington Rd, Claremont, Cape Town, 7780, South Africa",
+            "latitude": -33.9706,
+            "longitude": 18.4649
+        },
+        "pickup_instructions": "Call when arrived"
+    },
+    "receiver": {
+        "name": "Dwight Schrute",
+        "contact": "0712345678",
+        "email": "dwight@dundermifflin.com",
+        "delivery_address": {
+            "address1": "Tech Solutions Inc., Tech Park, Suite 500",
+            "address2": "12 Clyde Road",
+            "suburb": "Green Point",
+            "city": "Cape Town",
+            "province": "Western Cape",
+            "postal_code": "8005",
+            "country": "South Africa",
+            "full_address": "Tech Solutions Inc., Tech Park, Suite 500, 12 Clyde Road, Green Point, Cape Town, 8005, South Africa",
+            "latitude": -33.9095,
+            "longitude": 18.4155
+        },
+        "drop_off_instructions": "Please ring the bell twice"
+    },
+    "parcels": [
+        {
+            "reference": "Parcel-REF-1",
+            "description": "Books",
+            "dimensions": {
+                "length": 30,
+                "width": 20,
+                "height": 10
+            },
+            "weight": 5
+        }
+    ],
+    "shipment_title": "Order #1234",
+    "shipment_type": "outbound",
+    "carrier_service": "dpd-econ",
+    "purchase_label": False,
+    "collection_date": "2025-02-14",
+    "collection_time": "12:30:00"
+}
 
-client.conversations.list()
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())
 ```
 
 ```php
-$client = new \Protocol\ApiClient($token);
+<?php
+$curl = curl_init();
 
-$client->conversations->list();
+$data = [
+  "sender" => [
+    "name" => "Michael Scott",
+    "contact" => "0712345678",
+    "email" => "michael@dundermifflin.com",
+    "collection_address" => [
+      "address1" => "Unit 22",
+      "address2" => "26 Washington Rd",
+      "suburb" => "Claremont",
+      "city" => "Cape Town",
+      "province" => "Western Cape",
+      "postal_code" => "7780",
+      "country" => "South Africa",
+      "full_address" => "Unit 22, 26 Washington Rd, Claremont, Cape Town, 7780, South Africa",
+      "latitude" => -33.9706,
+      "longitude" => 18.4649
+    ],
+    "pickup_instructions" => "Call when arrived"
+  ],
+  "receiver" => [
+    "name" => "Dwight Schrute",
+    "contact" => "0712345678",
+    "email" => "dwight@dundermifflin.com",
+    "delivery_address" => [
+      "address1" => "Tech Solutions Inc., Tech Park, Suite 500",
+      "address2" => "12 Clyde Road",
+      "suburb" => "Green Point",
+      "city" => "Cape Town",
+      "province" => "Western Cape",
+      "postal_code" => "8005",
+      "country" => "South Africa",
+      "full_address" => "Tech Solutions Inc., Tech Park, Suite 500, 12 Clyde Road, Green Point, Cape Town, 8005, South Africa",
+      "latitude" => -33.9095,
+      "longitude" => 18.4155
+    ],
+    "drop_off_instructions" => "Please ring the bell twice"
+  ],
+  "parcels" => [[
+    "reference" => "Parcel-REF-1",
+    "description" => "Books",
+    "dimensions" => [
+      "length" => 30,
+      "width" => 20,
+      "height" => 10
+    ],
+    "weight" => 5
+  ]],
+  "shipment_title" => "Order #1234",
+  "shipment_type" => "outbound",
+  "carrier_service" => "dpd-econ",
+  "purchase_label" => false,
+  "collection_date" => "2025-02-14",
+  "collection_time" => "12:30:00"
+];
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://api.evership.app/v1/shipments",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_POST => true,
+  CURLOPT_HTTPHEADER => [
+    "Authorization: Bearer YOUR_API_KEY",
+    "Content-Type: application/json"
+  ],
+  CURLOPT_POSTFIELDS => json_encode($data)
+]);
+
+$response = curl_exec($curl);
+curl_close($curl);
+
+echo $response;
+?>
 ```
 
 </CodeGroup>
 
 <div className="not-prose">
-  <Button href="/conversations" variant="text" arrow="right">
-    <>Read the docs for the Conversations endpoint</>
+  <Button href="/shipments" variant="text" arrow="right">
+    <>Read the docs for the Shipments endpoint</>
   </Button>
 </div>
 
 ## What's next?
 
-Great, you're now set up with an API client and have made your first request to the API. Here are a few links that might be handy as you venture further into the Protocol API:
+Great, now you're set up and have made your first request to the API. Here are a few links that might be handy as you venture further into the Evership API:
 
 - [Grab your API key from the Evership dashboard](https://evership.app)
-- [Checkout the create shipment endpoint](/conversations)
+- [Checkout the create shipment endpoint](/shipments)
 - [Learn about the different error messages in Evership](/errors)
