@@ -1,6 +1,6 @@
 # Authentication
 
-You'll need to authenticate your requests to access any of the endpoints in the Evership API. In this guide, we'll walk through how authentication works. Evership uses API key authentication as the standard and only method for securing your API requests. You’ll include your API key in the request headers to verify your identity and gain access.
+You'll need to authenticate your requests to access any of the endpoints in the Evership API. In this guide, we'll walk through how authentication works. Evership uses API key authentication as the standard and only method for securing your API requests. You’ll include your API key in the request headers to verify your identity and gain access. {{ className: 'lead'}}
 
 ## API key authentication
 
@@ -9,7 +9,7 @@ Evership APIs require API key authentication to authorize requests. You must inc
 All API requests must be made over HTTPS, calls made over plain HTTP will fail. 
 
 
-<CodeGroup title="Example request with API key auth" tag="GET" label="/v1/shipments">
+<CodeGroup title="Example request with API key auth">
 
 ```bash {{ title: 'cURL' }}
 curl https://api.evership.app/v1/shipments \
