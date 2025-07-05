@@ -9,8 +9,69 @@ import '@/styles/tailwind.css'
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - Evership API Reference',
-    default: 'Evership API Reference',
+    template: '%s · Evership',
+    default: 'Developers · Evership',
+  },
+  description: 'Build powerful shipping workflows with the Evership API. Access endpoints for creating shipments, tracking parcels, retrieving labels, and integrating with your e-commerce stack.',
+  keywords: [
+    'Evership API',
+    'shipping API',
+    'e-commerce integration',
+    'parcel tracking',
+    'shipping labels',
+    'logistics API',
+    'South Africa shipping',
+    'courier integration',
+    'shipping workflow',
+    'delivery API'
+  ],
+  authors: [{ name: 'Evership' }],
+  creator: 'Evership',
+  publisher: 'Evership',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://developers.evership.co.za'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://developers.evership.co.za',
+    title: 'Developers · Evership',
+    description: 'Build powerful shipping workflows with the Evership API. Access endpoints for creating shipments, tracking parcels, retrieving labels, and integrating with your e-commerce stack.',
+    siteName: 'Evership Developers',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Evership API Documentation',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Developers · Evership',
+    description: 'Build powerful shipping workflows with the Evership API. Access endpoints for creating shipments, tracking parcels, retrieving labels, and integrating with your e-commerce stack.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code', // Replace with actual verification code
   },
 }
 
