@@ -3,7 +3,6 @@ import Link from 'next/link'
 import clsx from 'clsx'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
-import { Button } from '@/components/Button'
 import { Logo } from '@/components/Logo'
 import {
   MobileNavigation,
@@ -91,7 +90,12 @@ export const Header = forwardRef<
           <ThemeToggle />
         </div>
         <div className="hidden min-[416px]:contents">
-          <Button href="#">Sign in</Button>
+          <Link
+            href="#"
+            className="inline-flex h-[34px] items-center justify-center rounded-[10px] bg-zinc-200 px-[14px] py-[7px] text-[13px] font-normal text-zinc-900 transition-colors duration-[160ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-zinc-300 dark:bg-[rgb(230,230,230)] dark:text-[rgb(8,9,10)] dark:hover:bg-zinc-300"
+          >
+            Sign in
+          </Link>
         </div>
       </div>
     </motion.div>
