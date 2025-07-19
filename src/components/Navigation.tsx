@@ -266,7 +266,7 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
           <Link
-            href="#"
+            href="https://evership.app/login"
             className="inline-flex h-[34px] w-full items-center justify-center rounded-[10px] bg-zinc-200 px-[14px] py-[7px] text-[13px] font-normal text-zinc-900 transition-colors duration-[160ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-zinc-300 dark:bg-[rgb(230,230,230)] dark:text-[rgb(8,9,10)] dark:hover:bg-zinc-300"
           >
             Sign in
